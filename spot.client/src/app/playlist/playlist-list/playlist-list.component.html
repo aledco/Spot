@@ -1,0 +1,13 @@
+<h2>Playlists</h2>
+<div *ngIf="playlistsResult">
+  <table>
+    <tr>
+      <th>Name</th>
+      <!--<th>Owner</th>-->
+    </tr>
+    <tr *ngFor="let p of playlistsResult.items">
+      <td>{{p.name}}</td>
+      <!--<td>{{p.owner.name}}</td>-->
+    </tr>
+  </table>
+</div>
