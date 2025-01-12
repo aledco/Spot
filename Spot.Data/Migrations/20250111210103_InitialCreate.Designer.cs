@@ -11,7 +11,7 @@ using Spot.Data;
 namespace Spot.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250111182543_InitialCreate")]
+    [Migration("20250111210103_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -23,21 +23,6 @@ namespace Spot.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("SongSongTag", b =>
-                {
-                    b.Property<int>("SongTagsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SongsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SongTagsId", "SongsId");
-
-                    b.HasIndex("SongsId");
-
-                    b.ToTable("SongSongTag");
-                });
 
             modelBuilder.Entity("Spot.Data.Entities.Song", b =>
                 {
@@ -164,21 +149,6 @@ namespace Spot.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("SongSongTag", b =>
-                {
-                    b.HasOne("Spot.Data.Entities.SongTag", null)
-                        .WithMany()
-                        .HasForeignKey("SongTagsId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Spot.Data.Entities.Song", null)
-                        .WithMany()
-                        .HasForeignKey("SongsId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Spot.Data.Entities.Song", b =>
                 {
                     b.HasOne("Spot.Data.Entities.User", "User")
@@ -193,13 +163,13 @@ namespace Spot.Data.Migrations
             modelBuilder.Entity("Spot.Data.Entities.SongSongTagMap", b =>
                 {
                     b.HasOne("Spot.Data.Entities.Song", "Song")
-                        .WithMany()
+                        .WithMany("SongSongTagMaps")
                         .HasForeignKey("SongId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Spot.Data.Entities.SongTag", "SongTag")
-                        .WithMany()
+                        .WithMany("SongSongTagMaps")
                         .HasForeignKey("SongTagId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -236,6 +206,16 @@ namespace Spot.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Spot.Data.Entities.Song", b =>
+                {
+                    b.Navigation("SongSongTagMaps");
+                });
+
+            modelBuilder.Entity("Spot.Data.Entities.SongTag", b =>
+                {
+                    b.Navigation("SongSongTagMaps");
                 });
 #pragma warning restore 612, 618
         }

@@ -19,3 +19,8 @@ dotnet ef database update --project Spot.Data --startup-project Spot.Server --co
 ```
 dotnet ef database update <Name> --project Spot.Data --startup-project Spot.Server --context ApplicationContext
 ```
+
+### Revert all migrations
+```
+dotnet ef database update 0 --project Spot.Data --startup-project Spot.Server --context ApplicationContext
+```

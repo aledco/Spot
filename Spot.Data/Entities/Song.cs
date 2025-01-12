@@ -20,6 +20,8 @@ namespace Spot.Data.Entities
 
         public virtual User? User { get; set; }
 
-        public virtual IEnumerable<SongTag> SongTags { get; set; } = new List<SongTag>();
+        public virtual List<SongTag> SongTags { get; set; } = [];
+
+        public virtual List<SongSongTagMap> SongSongTagMaps { get; set; } = [];
     }
 }

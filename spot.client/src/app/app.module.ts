@@ -9,6 +9,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { StorageService } from './core/services/storage.service';
 import { AuthService } from './core/services/auth.service';
 import { HomeComponent } from './home/home.component';
+import { provideAnimations } from '@angular/platform-browser/animations';
 ;
 
 @NgModule({
@@ -20,10 +21,12 @@ import { HomeComponent } from './home/home.component';
   ],
   providers: [
     StorageService,
-    AuthService
+    AuthService,
+    provideAnimations()
   ],
   imports: [
-    BrowserModule, HttpClientModule,
+    BrowserModule,
+    HttpClientModule,
     AppRoutingModule
   ],
   bootstrap: [AppComponent]

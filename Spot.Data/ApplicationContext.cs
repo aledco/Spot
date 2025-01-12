@@ -28,11 +28,19 @@ namespace Spot.Data
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
 
-            //modelBuilder.Entity<SongSongTagMap>(e =>
-            //{
-            //    e.HasOne<Song>();
-            //    e.HasOne<SongTag>();
-            //});
+            modelBuilder.Entity<Song>()
+                .HasMany(e => e.SongTags)
+                .WithMany(e => e.Songs)
+                .UsingEntity<SongSongTagMap>();
+
+            modelBuilder.Entity<Song>()
+                .Navigation(e => e.SongTags)
+                .AutoInclude();
+
+            // cant have both
+            //modelBuilder.Entity<SongTag>()
+            //  .Navigation(e => e.Songs)
+            //  .AutoInclude();
         }
     }
 }

@@ -1,0 +1,16 @@
+<h3>Edit</h3>
+
+<div class="row" *ngIf="loaded">
+  <div class="col-6">
+    <label for="name" style="margin-right: 20px;">Name</label>
+    <input pInputText id="name" [(ngModel)]="song.name" style="width: 400px;"/>
+  </div>
+  <div class="col-3">
+    <label for="tag" style="margin-right: 20px;">Tag</label>
+    <p-multiSelect id="tag" [options]="tags" [(ngModel)]="song.tags" optionLabel="name" display="chip"></p-multiSelect>
+  </div>
+</div>
+
+<div>
+  <button type="submit" (click)="save()">Save</button>
+</div>

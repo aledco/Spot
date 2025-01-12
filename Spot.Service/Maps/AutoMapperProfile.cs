@@ -12,6 +12,7 @@ namespace Spot.Business.Maps
                 .ReverseMap();
 
             this.CreateMap<Song, SongModel>()
+                .ForMember(dst => dst.Tags, opt => opt.MapFrom(src => src.SongTags))
                 .ReverseMap();
 
             this.CreateMap<SongTag, SongTagModel>()

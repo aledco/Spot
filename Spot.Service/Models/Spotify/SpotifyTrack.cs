@@ -10,7 +10,7 @@ namespace Spot.Business.Models.Spotify
     {
         public object Album { get; set; }
 
-        public object[] Artists { get; set; }
+        public SimplifiedSpotifyArtist[] Artists { get; set; }
 
         public string Id { get; set; }
 

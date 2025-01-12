@@ -95,30 +95,6 @@ namespace Spot.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SongSongTag",
-                columns: table => new
-                {
-                    SongTagsId = table.Column<int>(type: "int", nullable: false),
-                    SongsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SongSongTag", x => new { x.SongTagsId, x.SongsId });
-                    table.ForeignKey(
-                        name: "FK_SongSongTag_SongTags_SongTagsId",
-                        column: x => x.SongTagsId,
-                        principalTable: "SongTags",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_SongSongTag_Songs_SongsId",
-                        column: x => x.SongsId,
-                        principalTable: "Songs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SongSongTagMaps",
                 columns: table => new
                 {
@@ -150,11 +126,6 @@ namespace Spot.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SongSongTag_SongsId",
-                table: "SongSongTag",
-                column: "SongsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_SongSongTagMaps_SongId",
                 table: "SongSongTagMaps",
                 column: "SongId");
@@ -183,9 +154,6 @@ namespace Spot.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "SongSongTag");
-
             migrationBuilder.DropTable(
                 name: "SongSongTagMaps");
 

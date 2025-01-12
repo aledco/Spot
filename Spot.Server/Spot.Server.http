@@ -1,6 +1,1 @@
 @Spot.Server_HostAddress = http://localhost:5163
-
-GET {{Spot.Server_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

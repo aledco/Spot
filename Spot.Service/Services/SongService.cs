@@ -43,11 +43,56 @@ namespace Spot.Business.Services
             }
 
             var entities = await this._songRepository.GetAllByUserIdAsync(user.Id);
-            return this._mapper.Map<List<SongModel>>(entities);
+            var models = this._mapper.Map<List<SongModel>>(entities);
+            return models;
+        }
+
+        public async Task<SongModel> GetAsync(string spotifyAccessToken, int songId)
+        {
+            var user = await this._userService.GetUserAsync(spotifyAccessToken);
+            if (user == null)
+            {
+                return null;
+            }
+
+            var entity = await this._songRepository.GetAsync(songId);
+            if (entity == null)
+            {
+                return null; // TODO error
+            }
+
+            if (entity.UserId != user.Id)
+            {
+                return null; // TODO error
+            }
+
+            var model = this._mapper.Map<SongModel>(entity);
+            return model;
+        }
+
+        public async Task<SongModel> SaveAsync(string spotifyAccessToken, SongModel model)
+        {
+            var entity = this._mapper.Map<Song>(model);
+            var savedEntity = await this._songRepository.SaveAsync(entity);
+            return this._mapper.Map<SongModel>(savedEntity);
+        }
+
+        public async Task<IList<SongTagModel>> GetAllTagsAsync(string spotifyAccessToken)
+        {
+            var user = await this._userService.GetUserAsync(spotifyAccessToken);
+            if (user == null)
+            {
+                return null;
+            }
+
+            var entities = await this._songTagRepository.GetAllByUserIdAsync(user.Id);
+            var models = this._mapper.Map<List<SongTagModel>>(entities);
+            return models;
         }
 
         public async Task<IList<SongModel>> SyncAsync(string spotifyAccessToken) // TODO use claims
         {
+            // TODO remove songs not in playlists
             var user = await this._userService.GetUserAsync(spotifyAccessToken);
             if (user == null)
             {
@@ -78,7 +123,7 @@ namespace Spot.Business.Services
                             UserId = user.Id,
                             SpotifyId = track.Id,
                             Name = track.Name,
-                            Artist = track.Artists.FirstOrDefault()?.ToString(), // TODO
+                            Artist = string.Join(" | ", track.Artists.Select(a => a.Name))
                         });
                     }
                     
@@ -90,7 +135,7 @@ namespace Spot.Business.Services
                             SongTagId = tag.Id
                         });
 
-                        song = await this._songRepository.GetAsync(song.Id); // TODO need to make sure tag is included
+                        song = songSongTagMap.Song;
                     }
 
                     songs.Add(this._mapper.Map<SongModel>(song));

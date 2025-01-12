@@ -17,5 +17,13 @@ namespace Spot.Data.Repositories
                 .Where(e => e.Name == playlistName)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<IList<SongTag>> GetAllByUserIdAsync(int userId)
+        {
+            return await this._context.SongTags
+                .Where(e => e.UserId.HasValue && e.UserId.Value == userId)
+                .Include(e => e.Songs)
+                .ToListAsync();
+        }
     }
 }

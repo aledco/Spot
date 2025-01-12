@@ -12,5 +12,6 @@
     <Folder Include="src\app\playlist\services\" />
     <Folder Include="src\app\playlist\playlist-list\" />
     <Folder Include="src\app\core\services\" />
+    <Folder Include="src\app\song\edit-song\" />
   </ItemGroup>
 </Project>

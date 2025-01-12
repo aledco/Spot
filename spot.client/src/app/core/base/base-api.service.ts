@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject } from "@angular/core";
 import { Observable, mergeMap } from "rxjs";
 import { AuthService } from "../services/auth.service";
@@ -25,5 +25,12 @@ export abstract class BaseAPIService {
     return this.auth.spotifyAccessToken.pipe(mergeMap(accessToken => {
       return this.http.post<R>(this.baseUrl + url + `?spotifyAccessToken=${accessToken}`, data);
     }));
+  }
+
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    });
   }
 }

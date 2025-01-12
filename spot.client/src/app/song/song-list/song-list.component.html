@@ -3,16 +3,27 @@
 <button (click)="sync()">Sync Songs From Playlists</button>
 
 <div *ngIf="songs">
-  <table>
-    <tr>
-      <th>Name</th>
-      <th>Artist</th>
-      <th>Tags</th>
-    </tr>
-    <tr *ngFor="let s of songs">
-      <td>{{s.name}}</td>
-      <td>{{s.artist}}</td>
-      <td>TODO</td>
-    </tr>
-  </table>
+  <p-table [value]="songs" [paginator]="true" [rows]="25" sortField="name" [sortOrder]="1">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+        <th pSortableColumn="artist">Artist <p-sortIcon field="artist" /></th>
+        <th>Tags</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-song>
+      <tr>
+        <td>{{ song.name }}</td>
+        <td>{{ song.artist }}</td>
+        <td>
+          <p-multiSelect [options]="tags" [(ngModel)]="song.tags" optionLabel="name" display="chip"></p-multiSelect>
+        </td>
+        <td class="actions">
+          <a title="edit" routerLink="/song/edit/{{song.id}}"><i class="pi pi-pencil"></i></a>
+          <a title="remove"><i class="pi pi-trash"></i></a>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>

@@ -14,8 +14,9 @@ const PROXY_CONFIG = [
   {
     "/api": {
       "target": "http://localhost:7108",
-      "secure": false
-    }
+      "secure": true
+    },
+    "changeOrigin": true
   }
 ]
 
