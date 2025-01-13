@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Spot.Business.Contracts;
 using Spot.Business.Models;
 
@@ -41,28 +40,16 @@ namespace Spot.Server.Controllers
             return await this._songService.GetAsync(this.SpotifyAccessToken, songId);
         }
 
-        [HttpGet]
-        [Route("Tags")]
-        public async Task<IList<SongTagModel>> GetAllTagsAsync()
-        {
-            if (string.IsNullOrEmpty(this.SpotifyAccessToken))
-            {
-                return null; // TODO implement system for returning errors
-            }
-
-            return await this._songService.GetAllTagsAsync(this.SpotifyAccessToken);
-        }
-
         [HttpPost]
-        [Route("Save")]
-        public async Task<SongModel> SaveAsync()
+        [Route("")]
+        public async Task<SongModel> SaveAsync([FromBody] SongModel model)
         {
             if (string.IsNullOrEmpty(this.SpotifyAccessToken))
             {
                 return null; // TODO implement system for returning errors
             }
 
-            return await this._songService.SaveAsync(this.SpotifyAccessToken, null);
+            return await this._songService.SaveAsync(this.SpotifyAccessToken, model);
         }
 
         [HttpPost]
@@ -74,7 +61,7 @@ namespace Spot.Server.Controllers
                 return null; // TODO implement system for returning errors
             }
 
-            return await this._songService.SyncAsync(this.SpotifyAccessToken);
+            return await this._songService.SyncSongsFromPlaylistsAsync(this.SpotifyAccessToken);
         }
     }
 }

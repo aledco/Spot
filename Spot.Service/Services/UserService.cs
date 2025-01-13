@@ -22,7 +22,7 @@ namespace Spot.Business.Services
             this._spotifyApiService = spotifyApiService;
         }
 
-        public async Task<UserModel> GetUserAsync(string spotifyAccessToken)
+        public async Task<UserModel> GetAsync(string spotifyAccessToken)
         {
             var spotifyUser = await this._spotifyApiService.GetSpotifyUserAsync(spotifyAccessToken);
             var user = await this._userRepository.GetBySpotifyIdAsync(spotifyUser.Id);

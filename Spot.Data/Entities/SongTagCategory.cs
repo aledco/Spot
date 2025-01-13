@@ -2,10 +2,8 @@
 
 namespace Spot.Data.Entities
 {
-    public class SongTagCategory
+    public class SongTagCategory : BaseIntegerIdEntity
     {
-        public int? Id { get; set; }
-
         [Required]
         public int? UserId { get; set; }
 

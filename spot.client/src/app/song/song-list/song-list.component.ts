@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { SongService } from "../services/song.service";
-import { finalize, forkJoin } from "rxjs";
+import { finalize } from "rxjs";
 import { Song } from "../../core/interfaces/song.interface";
 import { SongTag } from "../../core/interfaces/song-tag.interface";
 
@@ -14,24 +14,17 @@ export class SongListComponent implements OnInit {
   busy: boolean = false;
 
   songs!: Song[];
-  tags!: SongTag[];
 
   constructor(private songService: SongService) { }
 
   // TODO add filtering, tags support, etc
 
   ngOnInit(): void {
-    const observables = [
-      this.songService.getSongs(),
-      this.songService.getSongTags()
-    ];
-
-    forkJoin(observables)
+    this.songService.getSongs()
       .pipe(finalize(() => this.loaded = true))
       .subscribe({
-        next: ([songs, tags]) => {
+        next: songs => {
           this.songs = songs as Song[];
-          this.tags = tags as SongTag[];
         }
       });
   }

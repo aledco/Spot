@@ -1,8 +1,7 @@
 <h2>Songs</h2>
 
-<button (click)="sync()">Sync Songs From Playlists</button>
-
-<div *ngIf="songs">
+<div *ngIf="loaded">
+  <button (click)="sync()" [disabled]="busy">Sync Songs From Playlists</button>
   <p-table [value]="songs" [paginator]="true" [rows]="25" sortField="name" [sortOrder]="1">
     <ng-template pTemplate="header">
       <tr>
@@ -17,12 +16,17 @@
         <td>{{ song.name }}</td>
         <td>{{ song.artist }}</td>
         <td>
-          <p-multiSelect [options]="tags" [(ngModel)]="song.tags" optionLabel="name" display="chip"></p-multiSelect>
+          <p *ngFor="let tag of song.tags">{{tag}}</p>
         </td>
         <td class="actions">
-          <a title="edit" routerLink="/song/edit/{{song.id}}"><i class="pi pi-pencil"></i></a>
-          <a title="remove"><i class="pi pi-trash"></i></a>
+          <a title="edit" routerLink="/song/edit/{{song.id}}" [class.disabled]="busy"><i class="pi pi-pencil"></i></a>
+          <a title="remove" [class.disabled]="busy"><i class="pi pi-trash"></i></a>
         </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4">No songs have been added.</td>
       </tr>
     </ng-template>
   </p-table>

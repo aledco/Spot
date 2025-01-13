@@ -11,7 +11,7 @@ using Spot.Data;
 namespace Spot.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250111210103_InitialCreate")]
+    [Migration("20250113005151_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -85,9 +85,6 @@ namespace Spot.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -97,6 +94,9 @@ namespace Spot.Data.Migrations
 
                     b.Property<int?>("SongTagCategoryId")
                         .HasColumnType("int");
+
+                    b.Property<string>("SpotifyId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

@@ -24,7 +24,7 @@ namespace Spot.Server.Controllers
                 return null; // TODO implement system for returning errors
             }
 
-            return await this._spotifyPlaylistService.GetAllAsync(this.SpotifyAccessToken);
+            return await this._spotifyPlaylistService.GetAllPlaylistsAsync(this.SpotifyAccessToken);
         }
     }
 }

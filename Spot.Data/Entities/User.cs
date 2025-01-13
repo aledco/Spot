@@ -2,10 +2,8 @@
 
 namespace Spot.Data.Entities
 {
-    public class User
+    public class User : BaseIntegerIdEntity
     {
-        public int? Id { get; set; }
-
         [Required]
         public string? SpotifyId { get; set; }
     }

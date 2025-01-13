@@ -14,6 +14,7 @@ void ConfigureDependencyInjection(IServiceCollection services)
     services.AddTransient<ISpotifyApiService, SpotifyApiService>();
     services.AddTransient<IUserService, UserService>();
     services.AddTransient<ISongService, SongService>();
+    services.AddTransient<ISongTagService, SongTagService>();
     services.AddTransient<IUserRepository, UserRepository>();
     services.AddTransient<ISongRepository, SongRepository>();
     services.AddTransient<ISongTagRepository, SongTagRepository>();
@@ -45,12 +46,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularOrigins",
+    options.AddPolicy("AllowAll",
     builder =>
     {
-        builder.WithOrigins("http://localhost:4200")
+        builder
+            .AllowAnyOrigin()
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowAnyMethod()
+            .WithExposedHeaders("content-disposition")
+            .AllowAnyHeader()
+            .SetPreflightMaxAge(TimeSpan.FromSeconds(3600));
     });
 });
 
@@ -63,7 +69,8 @@ var app = builder.Build();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-app.UseCors("AllowAngularOrigins");
+app.UseCors("AllowAll");
+
 app.Use(async (context, next) =>
 {
     context.Response.Headers.Append("Access-Control-Allow-Origin", "*");

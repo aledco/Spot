@@ -15,14 +15,10 @@ export class SongService extends BaseAPIService {
   }
 
   saveSong(song: Song): Observable<Song> {
-    return this.post('/song/save', null);
+    return this.post('/song', song);
   }
 
   syncSongs(): Observable<Song[]> {
     return this.post('/song/sync', null);
-  }
-
-  getSongTags(): Observable<SongTag[]> {
-    return this.get('/song/tags');
   }
 }

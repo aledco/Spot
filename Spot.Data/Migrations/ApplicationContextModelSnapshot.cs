@@ -82,9 +82,6 @@ namespace Spot.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -94,6 +91,9 @@ namespace Spot.Data.Migrations
 
                     b.Property<int?>("SongTagCategoryId")
                         .HasColumnType("int");
+
+                    b.Property<string>("SpotifyId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

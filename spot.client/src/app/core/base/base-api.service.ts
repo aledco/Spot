@@ -23,14 +23,13 @@ export abstract class BaseAPIService {
 
   post<T, R>(url: string, data: T): Observable<R> {
     return this.auth.spotifyAccessToken.pipe(mergeMap(accessToken => {
-      return this.http.post<R>(this.baseUrl + url + `?spotifyAccessToken=${accessToken}`, data);
+      return this.http.post<R>(this.baseUrl + url + `?spotifyAccessToken=${accessToken}`, data, { headers:this.getHeaders() });
     }));
   }
 
   private getHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*"
-    });
+    const headers = new HttpHeaders();
+    headers.set('Content-Type', 'application/json');
+    return headers;
   }
 }

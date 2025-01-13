@@ -8,6 +8,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { EditSongComponent } from './edit-song/edit-song.component';
+import { SongTagService } from '../song-tag/services/song-tag.service';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { EditSongComponent } from './edit-song/edit-song.component';
     EditSongComponent
   ],
   providers: [
-    SongService
+    SongService,
+    SongTagService
   ],
   imports: [
     CommonModule,

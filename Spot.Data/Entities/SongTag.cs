@@ -2,20 +2,17 @@
 
 namespace Spot.Data.Entities
 {
-    public class SongTag
+    public class SongTag : BaseIntegerIdEntity
     {
-        public int? Id { get; set; }
-
         public int? SongCategoryId { get; set; } = null;
 
         [Required]
         public int? UserId { get; set; }
 
-        [Required]
-        public string? Name { get; set; }
+        public string? SpotifyId { get; set; }
 
         [Required]
-        public bool? Active { get; set; } = true;
+        public string? Name { get; set; }
 
         public virtual SongTagCategory? SongTagCategory { get; set; }
 

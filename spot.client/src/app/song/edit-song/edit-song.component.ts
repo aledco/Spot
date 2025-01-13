@@ -4,6 +4,7 @@ import { Song } from "../../core/interfaces/song.interface";
 import { SongTag } from "../../core/interfaces/song-tag.interface";
 import { ActivatedRoute } from "@angular/router";
 import { finalize, forkJoin } from "rxjs";
+import { SongTagService } from "../../song-tag/services/song-tag.service";
 
 @Component({
   selector: 'app-edit-song',
@@ -14,7 +15,11 @@ export class EditSongComponent implements OnInit {
   song!: Song;
   tags!: SongTag[];
 
-  constructor(private songService: SongService, private route: ActivatedRoute) {
+  constructor(
+    private songService: SongService,
+    private songTagService: SongTagService,
+    private route: ActivatedRoute
+  ) {
   }
 
   ngOnInit() {
@@ -25,7 +30,7 @@ export class EditSongComponent implements OnInit {
 
     const observables = [
       this.songService.getSong(+songId),
-      this.songService.getSongTags()
+      this.songTagService.getSongTags()
     ];
 
     forkJoin(observables)

@@ -10,7 +10,7 @@ import { Buffer } from 'buffer';
 export class AuthService {
   
   private readonly redirectUri = "https://localhost:4200/callback";
-  private readonly scope = "user-read-private user-read-email playlist-read-private user-library-read";
+  private readonly scope = "user-read-private user-read-email playlist-read-private user-library-read playlist-modify-public playlist-modify-private";
   private readonly clientId = "27a2d7be9b5349b8aac7ddfa418f3596"; // TODO use config
   private readonly clientSecret = "150d0f76f7df47ff96ffa07c7266c27a"; // TODO use config
 

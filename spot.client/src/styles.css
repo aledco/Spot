@@ -1,8 +1,15 @@
 .actions > a {
   margin-left: 10px;
+  color: black;
 }
 
 .actions > a:hover {
   color: blue;
   font-weight: bold;
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  color: grey;
 }

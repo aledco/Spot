@@ -73,8 +73,8 @@ namespace Spot.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SongCategoryId = table.Column<int>(type: "int", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false),
+                    SpotifyId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Active = table.Column<bool>(type: "bit", nullable: false),
                     SongTagCategoryId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>

@@ -10,6 +10,15 @@ namespace Spot.Data.Repositories
         {   
         }
 
+        public async Task<IList<Song>> GetAllBySongTagIdAsync(int songTagId)
+        {
+            return await this._context.Songs
+                .Join(this._context.SongSongTagMaps, x => x.Id, y => y.SongId, (song, map) => new { Song = song, Map = map })
+                .Where(e => e.Map.SongTagId == songTagId)
+                .Select(e => e.Song)
+                .ToListAsync();
+        }
+
         public async Task<IList<Song>> GetAllByUserIdAsync(int userId)
         {
             return await this._context.Songs

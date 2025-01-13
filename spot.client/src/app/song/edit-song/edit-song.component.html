@@ -7,7 +7,7 @@
   </div>
   <div class="col-3">
     <label for="tag" style="margin-right: 20px;">Tag</label>
-    <p-multiSelect id="tag" [options]="tags" [(ngModel)]="song.tags" optionLabel="name" display="chip"></p-multiSelect>
+    <p-multiSelect id="tag" [options]="tags" [(ngModel)]="song.tagIds" optionLabel="name" optionValue="id" display="chip"></p-multiSelect>
   </div>
 </div>
 
