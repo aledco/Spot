@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BaseAPIService } from "../../core/base/base-api.service";
 import { Observable } from "rxjs";
-import { Song } from "../../core/interfaces/song.interface";
 import { SongTag } from "../../core/interfaces/song-tag.interface";
 
 @Injectable()
@@ -14,7 +13,7 @@ export class SongTagService extends BaseAPIService {
     return this.get('/songtag');
   }
 
-  saveSongTag(songTag: SongTag): Observable<Song> {
+  saveSongTag(songTag: SongTag): Observable<SongTag> {
     return this.post('/songtag', songTag);
   }
 }

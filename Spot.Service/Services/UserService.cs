@@ -2,6 +2,7 @@
 using Spot.Business.Contracts;
 using Spot.Business.Contracts.Spotify;
 using Spot.Business.Models;
+using Spot.Business.Models.Result;
 using Spot.Data.Contracts;
 using Spot.Data.Entities;
 
@@ -22,9 +23,15 @@ namespace Spot.Business.Services
             this._spotifyApiService = spotifyApiService;
         }
 
-        public async Task<UserModel> GetAsync(string spotifyAccessToken)
+        public async Task<OperationResult<UserModel>> GetAsync(string spotifyAccessToken)
         {
-            var spotifyUser = await this._spotifyApiService.GetSpotifyUserAsync(spotifyAccessToken);
+            var spotifyUserResult = await this._spotifyApiService.GetSpotifyUserAsync(spotifyAccessToken);
+            if (!spotifyUserResult.IsValid)
+            {
+                return spotifyUserResult.ErrorsAs<UserModel>();
+            }
+
+            var spotifyUser = spotifyUserResult.Result;
             var user = await this._userRepository.GetBySpotifyIdAsync(spotifyUser.Id);
             if (user == null)
             {
@@ -34,7 +41,7 @@ namespace Spot.Business.Services
                 });
             }
 
-            return this._mapper.Map<UserModel>(user);
+            return OperationResult<UserModel>.Success(this._mapper.Map<UserModel>(user));
         }
     }
 }

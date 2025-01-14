@@ -22,14 +22,18 @@ export class AuthService {
   
   constructor(private storageService: StorageService, private http: HttpClient, private router: Router) { }
 
-  get spotifyAccessToken(): Observable<string> {
+  get spotifyAccessToken(): string {
     const accessToken = this.storageService.get<string>(this.spotifyAccessTokenKey);
-    if (accessToken) {
-      return of(accessToken);
+    if (!accessToken) {
+      this.login();
+      return "";
     }
-    else {
-      return this._spotifyAccessToken.pipe();
-    }
+
+    return accessToken;
+  }
+
+  get isLoggedIn(): boolean {
+    return this.storageService.has(this.spotifyAccessTokenKey);
   }
 
   login(): void {
@@ -56,5 +60,10 @@ export class AuthService {
           console.log(error); // TODO handle
         }
       })
+  }
+
+  home() {
+    this.storageService.delete(this.spotifyAccessTokenKey);
+    this.router.navigate(['/home']);
   }
 }

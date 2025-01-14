@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Spot.Business.Contracts.Spotify;
+using Spot.Business.Models.Result;
 using Spot.Business.Models.Spotify;
 
 namespace Spot.Server.Controllers
@@ -17,11 +18,11 @@ namespace Spot.Server.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<SpotifyPlaylistPage> GetAllAsync()
+        public async Task<OperationResult<IList<SimplifiedSpotifyPlaylist>>> GetAllAsync()
         {
             if (string.IsNullOrEmpty(this.SpotifyAccessToken))
             {
-                return null; // TODO implement system for returning errors
+                return OperationResult<IList<SimplifiedSpotifyPlaylist>>.Failed();
             }
 
             return await this._spotifyPlaylistService.GetAllPlaylistsAsync(this.SpotifyAccessToken);

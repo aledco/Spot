@@ -16,4 +16,18 @@ export class StorageService {
       return null;
     }
   }
+
+  delete(key: string): void {
+    localStorage.removeItem(key);
+  }
+
+  has(key: string): boolean {
+    const json = localStorage.getItem(key);
+    if (json) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
 }

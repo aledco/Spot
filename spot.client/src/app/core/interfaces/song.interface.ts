@@ -1,7 +1,7 @@
 import { SongTag } from "./song-tag.interface";
 
 export interface Song {
-  id: number;
+  id: number | null;
   name: string;
   artist: string;
   spotifyId: string;

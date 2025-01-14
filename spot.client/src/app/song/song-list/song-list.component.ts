@@ -36,7 +36,7 @@ export class SongListComponent implements OnInit {
       .subscribe({
         next: songs => {
           this.songs = songs;
-        }
+        },
       });
   }
 }

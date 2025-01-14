@@ -1,0 +1,28 @@
+<h2>Song Tags</h2>
+
+<p-progressSpinner ariaLabel="loaded" *ngIf="!loaded" />
+<div *ngIf="loaded">
+  <button routerLink="/songtag/add">Add Song Tag</button>
+  <p-table [value]="songTags" [paginator]="true" [rows]="25" sortField="name" [sortOrder]="1">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-songTag>
+      <tr>
+        <td>{{ songTag.name }}</td>
+        <td class="actions">
+          <a title="edit" routerLink="/songtag/edit/{{songTag.id}}"><i class="pi pi-pencil"></i></a>
+          <a title="remove"><i class="pi pi-trash"></i></a>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="2">No song tags have been added.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

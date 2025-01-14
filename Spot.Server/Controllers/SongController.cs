@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Spot.Business.Contracts;
 using Spot.Business.Models;
+using Spot.Business.Models.Result;
 
 namespace Spot.Server.Controllers
 {
@@ -18,11 +19,11 @@ namespace Spot.Server.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<IList<SongModel>> GetAllAsync()
+        public async Task<OperationResult<IList<SongModel>>> GetAllAsync()
         {
             if (string.IsNullOrEmpty(this.SpotifyAccessToken))
             {
-                return null; // TODO implement system for returning errors
+                return OperationResult<IList<SongModel>>.Fatal();
             }
 
             return await this._songService.GetAllAsync(this.SpotifyAccessToken);
@@ -30,11 +31,11 @@ namespace Spot.Server.Controllers
 
         [HttpGet]
         [Route("{songId:int}")]
-        public async Task<SongModel> GetAsync([FromRoute] int songId)
+        public async Task<OperationResult<SongModel>> GetAsync([FromRoute] int songId)
         {
             if (string.IsNullOrEmpty(this.SpotifyAccessToken))
             {
-                return null; // TODO implement system for returning errors
+                return OperationResult<SongModel>.Fatal();
             }
 
             return await this._songService.GetAsync(this.SpotifyAccessToken, songId);
@@ -42,11 +43,11 @@ namespace Spot.Server.Controllers
 
         [HttpPost]
         [Route("")]
-        public async Task<SongModel> SaveAsync([FromBody] SongModel model)
+        public async Task<OperationResult<SongModel>> SaveAsync([FromBody] SongModel model)
         {
             if (string.IsNullOrEmpty(this.SpotifyAccessToken))
             {
-                return null; // TODO implement system for returning errors
+                return OperationResult<SongModel>.Fatal();
             }
 
             return await this._songService.SaveAsync(this.SpotifyAccessToken, model);
@@ -54,11 +55,11 @@ namespace Spot.Server.Controllers
 
         [HttpPost]
         [Route("Sync")]
-        public async Task<IList<SongModel>> SyncSongsFromPlaylistsAsync()
+        public async Task<OperationResult<IList<SongModel>>> SyncSongsFromPlaylistsAsync()
         {
             if (string.IsNullOrEmpty(this.SpotifyAccessToken))
             {
-                return null; // TODO implement system for returning errors
+                return OperationResult<IList<SongModel>>.Fatal();
             }
 
             return await this._songService.SyncSongsFromPlaylistsAsync(this.SpotifyAccessToken);

@@ -1,16 +1,21 @@
 <h3>Edit</h3>
 
+<p-progressSpinner ariaLabel="loaded" *ngIf="!loaded || busy" />
 <div class="row" *ngIf="loaded">
-  <div class="col-6">
+  <div class="col-4">
     <label for="name" style="margin-right: 20px;">Name</label>
-    <input pInputText id="name" [(ngModel)]="song.name" style="width: 400px;"/>
+    <input pInputText id="name" [(ngModel)]="song.name" style="width: 400px;" />
   </div>
-  <div class="col-3">
+  <div class="col-4">
+    <label for="name" style="margin-right: 20px;">Artist</label>
+    <input pInputText id="name" [(ngModel)]="song.artist" style="width: 400px;" />
+  </div>
+  <div class="col-4">
     <label for="tag" style="margin-right: 20px;">Tag</label>
     <p-multiSelect id="tag" [options]="tags" [(ngModel)]="song.tagIds" optionLabel="name" optionValue="id" display="chip"></p-multiSelect>
   </div>
 </div>
 
 <div>
-  <button type="submit" (click)="save()">Save</button>
+  <button type="submit" (click)="save()" [disabled]="busy">Save</button>
 </div>

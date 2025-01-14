@@ -2,6 +2,7 @@
 using Spot.Business.Contracts;
 using Spot.Business.Contracts.Spotify;
 using Spot.Business.Models;
+using Spot.Business.Models.Result;
 using Spot.Data.Contracts;
 using Spot.Data.Entities;
 
@@ -28,27 +29,29 @@ namespace Spot.Business.Services
             this._spotifyApiService = spotifyApiService;
         }
 
-        public async Task<IList<SongTagModel>> GetAllAsync(string spotifyAccessToken)
+        public async Task<OperationResult<IList<SongTagModel>>> GetAllAsync(string spotifyAccessToken)
         {
-            var user = await this._userService.GetAsync(spotifyAccessToken);
-            if (user == null)
+            var userResult = await this._userService.GetAsync(spotifyAccessToken);
+            if (!userResult.IsValid)
             {
-                return null;
+                return userResult.ErrorsAs<IList<SongTagModel>>();
             }
 
-            var entities = await this._songTagRepository.GetAllByUserIdAsync(user.Id);
+            var user = userResult.Result;
+            var entities = await this._songTagRepository.GetAllByUserIdAsync(user.Id.Value);
             var models = this._mapper.Map<List<SongTagModel>>(entities);
-            return models;
+            return OperationResult<IList<SongTagModel>>.Success(models);
         }
 
-        public async Task<SongTagModel> GetAsync(string spotifyAccessToken, int songTagId)
+        public async Task<OperationResult<SongTagModel>> GetAsync(string spotifyAccessToken, int songTagId)
         {
-            var user = await this._userService.GetAsync(spotifyAccessToken);
-            if (user == null)
+            var userResult = await this._userService.GetAsync(spotifyAccessToken);
+            if (!userResult.IsValid)
             {
-                return null;
+                return userResult.ErrorsAs<SongTagModel>();
             }
 
+            var user = userResult.Result;
             var entity = await this._songTagRepository.GetAsync(songTagId);
             if (entity == null)
             {
@@ -61,17 +64,43 @@ namespace Spot.Business.Services
             }
 
             var model = this._mapper.Map<SongTagModel>(entity);
-            return model;
+            return OperationResult<SongTagModel>.Success(model);
         }
 
-        public async Task<SongTagModel> SaveAsync(string spotifyAccessToken, SongTagModel model)
+        public async Task<OperationResult<SongTagModel>> SaveAsync(string spotifyAccessToken, SongTagModel model)
         {
-            // TODO sync spotify playlist for tag if tag exists (in case name changed), only need to make a new playlist when a song is given a tag
-            var user = await this._userService.GetAsync(spotifyAccessToken);
+            // TODO use transaction scope
+
+            if (model.Id == null)
+            {
+                var playlistResult = await this._spotifyApiService.CreatePlaylistFromSongTagAsync(spotifyAccessToken, model);
+                if (!playlistResult.IsValid)
+                {
+                    return playlistResult.ErrorsAs<SongTagModel>();
+                }
+
+                model.SpotifyId = playlistResult.Result.Id;
+            }
+            else
+            {
+                var result = await this._spotifyApiService.UpdatePlaylistFromSongTagAsync(spotifyAccessToken.ToString(), model);
+                if (!result.IsValid)
+                {
+                    return result.ErrorsAs<SongTagModel>();
+                }
+            }
+
+            var userResult = await this._userService.GetAsync(spotifyAccessToken);
+            if (!userResult.IsValid)
+            {
+                return userResult.ErrorsAs<SongTagModel>();
+            }
+
+            var user = userResult.Result;
             var entity = this._mapper.Map<SongTag>(model);
             entity.UserId = user.Id;
             var savedEntity = await this._songTagRepository.SaveAsync(entity);
-            return this._mapper.Map<SongTagModel>(savedEntity);
+            return OperationResult<SongTagModel>.Success(this._mapper.Map<SongTagModel>(savedEntity));
         }
     }
 }

@@ -10,7 +10,9 @@ import { StorageService } from './core/services/storage.service';
 import { AuthService } from './core/services/auth.service';
 import { HomeComponent } from './home/home.component';
 import { provideAnimations } from '@angular/platform-browser/animations';
-;
+import { MenubarModule } from 'primeng/menubar';
+import { CoreModule } from './core/core.module';
+import { ToastrModule, provideToastr } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -22,11 +24,15 @@ import { provideAnimations } from '@angular/platform-browser/animations';
   providers: [
     StorageService,
     AuthService,
-    provideAnimations()
+    provideAnimations(),
+    provideToastr()
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    MenubarModule,
+    CoreModule,
+    ToastrModule.forRoot(),
     AppRoutingModule
   ],
   bootstrap: [AppComponent]

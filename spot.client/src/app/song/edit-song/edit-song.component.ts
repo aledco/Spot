@@ -12,6 +12,7 @@ import { SongTagService } from "../../song-tag/services/song-tag.service";
 })
 export class EditSongComponent implements OnInit {
   loaded: boolean = false;
+  busy: boolean = false;
   song!: Song;
   tags!: SongTag[];
 
@@ -44,7 +45,9 @@ export class EditSongComponent implements OnInit {
   }
 
   save() {
+    this.busy = true;
     this.songService.saveSong(this.song)
+      .pipe(finalize(() => this.busy = false))
       .subscribe({
         next: song => {
           this.song = song;

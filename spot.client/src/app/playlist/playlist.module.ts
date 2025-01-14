@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { PlaylistRoutingModule } from './playlist-routing.module';
 import { PlaylistListComponent } from './playlist-list/playlist-list.component';
 import { PlaylistService } from './services/playlist.service';
-import { CommonModule } from '@angular/common';
-
-;
+import { CoreModule } from '../core/core.module';
 
 @NgModule({
   declarations: [
@@ -14,7 +12,7 @@ import { CommonModule } from '@angular/common';
     PlaylistService
   ],
   imports: [
-    CommonModule,
+    CoreModule,
     PlaylistRoutingModule
   ]
 })

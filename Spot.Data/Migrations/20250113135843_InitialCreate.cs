@@ -75,6 +75,8 @@ namespace Spot.Data.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     SpotifyId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsPublic = table.Column<bool>(type: "bit", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SongTagCategoryId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>

@@ -26,6 +26,10 @@ const routes: Routes = [
     loadChildren: () => import('./song/song.module').then(m => m.SongModule)
   },
   {
+    path: 'songtag',
+    loadChildren: () => import('./song-tag/song-tag.module').then(m => m.SongTagModule)
+  },
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full',

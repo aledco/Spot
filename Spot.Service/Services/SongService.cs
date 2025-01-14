@@ -2,6 +2,8 @@
 using Spot.Business.Contracts;
 using Spot.Business.Contracts.Spotify;
 using Spot.Business.Models;
+using Spot.Business.Models.Result;
+using Spot.Business.Resources;
 using Spot.Data.Contracts;
 using Spot.Data.Entities;
 
@@ -31,47 +33,48 @@ namespace Spot.Business.Services
             this._spotifyApiService = spotifyApiService;
         }
 
-        public async Task<IList<SongModel>> GetAllAsync(string spotifyAccessToken)
+        public async Task<OperationResult<IList<SongModel>>> GetAllAsync(string spotifyAccessToken)
         {
-            var user = await this._userService.GetAsync(spotifyAccessToken);
-            if (user == null)
+            var userResult = await this._userService.GetAsync(spotifyAccessToken);
+            if (!userResult.IsValid)
             {
-                return null;
+                return userResult.ErrorsAs<IList<SongModel>>();
             }
-
-            var entities = await this._songRepository.GetAllByUserIdAsync(user.Id);
+            
+            var user = userResult.Result;
+            var entities = await this._songRepository.GetAllByUserIdAsync(user.Id.Value);
             var models = this._mapper.Map<List<SongModel>>(entities);
-            return models;
+            return OperationResult<IList<SongModel>>.Success(models);
         }
 
-        public async Task<SongModel> GetAsync(string spotifyAccessToken, int songId)
+        public async Task<OperationResult<SongModel>> GetAsync(string spotifyAccessToken, int songId)
         {
-            var user = await this._userService.GetAsync(spotifyAccessToken);
-            if (user == null)
+            var userResult = await this._userService.GetAsync(spotifyAccessToken);
+            if (!userResult.IsValid)
             {
-                return null;
+                return userResult.ErrorsAs<SongModel>();
             }
+
+            var user = userResult.Result;
 
             var entity = await this._songRepository.GetAsync(songId);
             if (entity == null)
             {
-                return null; // TODO error
+                return OperationResult<SongModel>.Failed();
             }
 
             if (entity.UserId != user.Id)
             {
-                return null; // TODO error
+                return OperationResult<SongModel>.Failed();
             }
 
             var model = this._mapper.Map<SongModel>(entity);
-            return model;
+            return OperationResult<SongModel>.Success(model);
         }
 
-        public async Task<SongModel> SaveAsync(string spotifyAccessToken, SongModel model) // TODO rename to update
+        public async Task<OperationResult<SongModel>> SaveAsync(string spotifyAccessToken, SongModel model) // TODO rename to update
         {
-            // TODO sync spotify playlists for tags
-
-            var existingMaps = await this._songSongTagMapRepository.GetAllBySongIdAsync(model.Id);
+            var existingMaps = await this._songSongTagMapRepository.GetAllBySongIdAsync(model.Id.Value);
 
             var mapsToAdd = model.TagIds
                 .Where(tagId => !existingMaps.Any(map => map.SongTagId == tagId))
@@ -103,32 +106,42 @@ namespace Spot.Business.Services
             await this._songSongTagMapRepository.SaveRangeAsync(mapsToAdd);
             await this._songSongTagMapRepository.DeleteRangeAsync(mapsToDelete);
 
-            var existingEntity = await this._songRepository.GetAsync(model.Id);
+            var existingEntity = await this._songRepository.GetAsync(model.Id.Value);
             if (existingEntity == null)
             {
-                return null; // TODO need to support adding a song too, probably seperate endpont since we need to search spotify
+                return OperationResult<SongModel>.Failed(); // TODO need to support adding a song too, probably seperate endpont since we need to search spotify
             }
 
             existingEntity.Name = model.Name;
             existingEntity.Artist = model.Artist;
             var savedEntity = await this._songRepository.SaveAsync(existingEntity);
-            return this._mapper.Map<SongModel>(savedEntity);
+            return OperationResult<SongModel>.Success(this._mapper.Map<SongModel>(savedEntity));
         }
 
-        public async Task<IList<SongModel>> SyncSongsFromPlaylistsAsync(string spotifyAccessToken) // TODO use claims
+        public async Task<OperationResult<IList<SongModel>>> SyncSongsFromPlaylistsAsync(string spotifyAccessToken) // TODO use claims
         {
+            return OperationResult<IList<SongModel>>.Failed(ErrorMessages.UserNotFound);
+
             // TODO remove songs not in playlists
-            var user = await this._userService.GetAsync(spotifyAccessToken);
-            if (user == null)
+            var userResult = await this._userService.GetAsync(spotifyAccessToken);
+            if (!userResult.IsValid)
             {
-                return null;
+                return userResult.ErrorsAs<IList<SongModel>>();
             }
 
+            var user = userResult.Result;
+
             var songs = new List<SongModel>();
-            var playlistTracks = await this._spotifyApiService.GetAllTracksFromPlaylistsAsync(spotifyAccessToken);
+            var playlistTracksResult = await this._spotifyApiService.GetAllTracksFromPlaylistsAsync(spotifyAccessToken);
+            if (!playlistTracksResult.IsValid)
+            {
+                return playlistTracksResult.ErrorsAs<IList<SongModel>> ();
+            }
+
+            var playlistTracks = playlistTracksResult.Result;
             foreach (var (playlist, tracks) in playlistTracks)
             {
-                var tag = await this._songTagRepository.GetByPlaylistNameAsync(user.Id, playlist.Name);
+                var tag = await this._songTagRepository.GetByPlaylistNameAsync(user.Id.Value, playlist.Name);
                 if (tag == null)
                 {
                     tag = await this._songTagRepository.SaveAsync(new SongTag
@@ -136,12 +149,14 @@ namespace Spot.Business.Services
                         UserId = user.Id,
                         Name = playlist.Name,
                         SpotifyId = playlist.Id,
+                        IsPublic = playlist.Public,
+                        Description = playlist.Description,
                     });
                 }
 
                 foreach (var track in tracks)
                 {
-                    var song = await this._songRepository.GetByUserIdAndSpotifyIdAsync(user.Id, track.Id);
+                    var song = await this._songRepository.GetByUserIdAndSpotifyIdAsync(user.Id.Value, track.Id);
                     if (song == null)
                     {
                         song = await this._songRepository.SaveAsync(new Song()
@@ -168,7 +183,7 @@ namespace Spot.Business.Services
                 }
             }
 
-            return songs;
+            return OperationResult<IList<SongModel>>.Success(songs);
         }
     }
 }

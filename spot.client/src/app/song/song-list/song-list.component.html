@@ -1,5 +1,6 @@
 <h2>Songs</h2>
 
+<p-progressSpinner ariaLabel="loaded" *ngIf="!loaded || busy" />
 <div *ngIf="loaded">
   <button (click)="sync()" [disabled]="busy">Sync Songs From Playlists</button>
   <p-table [value]="songs" [paginator]="true" [rows]="25" sortField="name" [sortOrder]="1">

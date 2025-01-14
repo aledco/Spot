@@ -1,0 +1,13 @@
+<h3>Edit</h3>
+
+<p-progressSpinner ariaLabel="loaded" *ngIf="!loaded || busy" />
+<div class="row" *ngIf="loaded">
+  <div class="col-4">
+    <label for="name" style="margin-right: 20px;">Name</label>
+    <input pInputText id="name" [(ngModel)]="songTag.name" style="width: 400px;" />
+  </div>
+</div>
+
+<div>
+  <button type="submit" (click)="save()" [disabled]="busy">Save</button>
+</div>

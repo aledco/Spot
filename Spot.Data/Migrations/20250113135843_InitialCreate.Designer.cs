@@ -11,7 +11,7 @@ using Spot.Data;
 namespace Spot.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250113005151_InitialCreate")]
+    [Migration("20250113135843_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -84,6 +84,12 @@ namespace Spot.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()

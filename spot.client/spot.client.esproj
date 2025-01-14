@@ -8,10 +8,11 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\spot.client\browser\</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="src\app\dashboard\" />
+    <Folder Include="src\app\core\interfaces\result\" />
     <Folder Include="src\app\playlist\services\" />
     <Folder Include="src\app\playlist\playlist-list\" />
     <Folder Include="src\app\core\services\" />
     <Folder Include="src\app\song\edit-song\" />
+    <Folder Include="src\app\song\add-song\" />
   </ItemGroup>
 </Project>

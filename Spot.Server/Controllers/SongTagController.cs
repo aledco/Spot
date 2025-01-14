@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Spot.Business.Contracts;
 using Spot.Business.Models;
+using Spot.Business.Models.Result;
 
 namespace Spot.Server.Controllers
 {
@@ -19,11 +19,11 @@ namespace Spot.Server.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<IList<SongTagModel>> GetAllAsync()
+        public async Task<OperationResult<IList<SongTagModel>>> GetAllAsync()
         {
             if (string.IsNullOrEmpty(this.SpotifyAccessToken))
             {
-                return null; // TODO implement system for returning errors
+                return OperationResult<IList<SongTagModel>>.Fatal();
             }
 
             return await this._songTagService.GetAllAsync(this.SpotifyAccessToken);
@@ -31,11 +31,11 @@ namespace Spot.Server.Controllers
 
         [HttpGet]
         [Route("{songTagId:int}")]
-        public async Task<SongTagModel> GetAsync([FromRoute] int songTagId)
+        public async Task<OperationResult<SongTagModel>> GetAsync([FromRoute] int songTagId)
         {
             if (string.IsNullOrEmpty(this.SpotifyAccessToken))
             {
-                return null; // TODO implement system for returning errors
+                return OperationResult<SongTagModel>.Fatal();
             }
 
             return await this._songTagService.GetAsync(this.SpotifyAccessToken, songTagId);
@@ -43,11 +43,11 @@ namespace Spot.Server.Controllers
 
         [HttpPost]
         [Route("")]
-        public async Task<SongTagModel> SaveAsync([FromBody] SongTagModel model)
+        public async Task<OperationResult<SongTagModel>> SaveAsync([FromBody] SongTagModel model)
         {
             if (string.IsNullOrEmpty(this.SpotifyAccessToken))
             {
-                return null; // TODO implement system for returning errors
+                return OperationResult<SongTagModel>.Fatal();
             }
 
             return await this._songTagService.SaveAsync(this.SpotifyAccessToken, model);

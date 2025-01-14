@@ -38,7 +38,6 @@ void ConfigureAutoMapper(IServiceCollection services)
     var mapper = mapperConfig.CreateMapper();
     services.AddSingleton(mapper);
 }
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();

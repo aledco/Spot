@@ -1,8 +1,9 @@
 import { Song } from "./song.interface";
 
 export interface SongTag {
-  id: number;
+  id: number | null;
   name: string;
+  descrpiption: string;
+  isPublic: boolean;
   songTagCategory: any;
-  songs: Song[];
 }

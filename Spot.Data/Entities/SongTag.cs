@@ -14,6 +14,11 @@ namespace Spot.Data.Entities
         [Required]
         public string? Name { get; set; }
 
+        [Required]
+        public bool? IsPublic { get; set; }
+
+        public string? Description { get; set; }
+
         public virtual SongTagCategory? SongTagCategory { get; set; }
 
         public virtual User? User { get; set; }
