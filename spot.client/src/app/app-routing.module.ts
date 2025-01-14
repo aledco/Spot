@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CallbackComponent } from './callback/callback.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HomeComponent } from './home/home.component';
+import { authGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -15,19 +16,23 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: DashboardComponent
+    component: DashboardComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'playlist',
-    loadChildren: () => import('./playlist/playlist.module').then(m => m.PlaylistModule)
+    loadChildren: () => import('./playlist/playlist.module').then(m => m.PlaylistModule),
+    canActivate: [authGuard]
   },
   {
     path: 'song',
-    loadChildren: () => import('./song/song.module').then(m => m.SongModule)
+    loadChildren: () => import('./song/song.module').then(m => m.SongModule),
+    canActivate: [authGuard]
   },
   {
     path: 'songtag',
-    loadChildren: () => import('./song-tag/song-tag.module').then(m => m.SongTagModule)
+    loadChildren: () => import('./song-tag/song-tag.module').then(m => m.SongTagModule),
+    canActivate: [authGuard]
   },
   {
     path: '',

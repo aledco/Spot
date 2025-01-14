@@ -1,15 +1,55 @@
-.actions > a {
+.actions > a > i {
   margin-left: 10px;
   color: black;
+  font-size: 1.2rem;
 }
 
-.actions > a:hover {
+.actions > a:hover > i {
   color: blue;
   font-weight: bold;
+  cursor: pointer;
 }
 
 a.disabled {
   pointer-events: none;
   cursor: not-allowed;
   color: grey;
+}
+
+.page-header {
+  width: 75%;
+  margin: auto;
+  text-align: center;
+  border-bottom: solid;
+  margin-bottom: 30px;
+}
+
+.page-body {
+  width: 75%;
+  margin: auto;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.p-menubar {
+  width: 75%;
+  margin: auto;
+}
+
+.menu-title > a {
+    color: black;
+}
+
+label {
+  display: block;
+  position: relative;
+  font-weight: bold;
 }

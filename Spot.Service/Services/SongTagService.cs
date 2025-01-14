@@ -12,6 +12,7 @@ namespace Spot.Business.Services
     {
         private readonly ISongTagRepository _songTagRepository;
         private readonly ISongTagCategoryRepository _songTagCategoryRepository;
+        private readonly ISongSongTagMapRepository _songSongTagMapRepository;
         private readonly IUserService _userService;
         private readonly ISpotifyApiService _spotifyApiService;
 
@@ -19,12 +20,14 @@ namespace Spot.Business.Services
             IMapper mapper,
             ISongTagRepository songTagRepository,
             ISongTagCategoryRepository songTagCategoryRepository,
+            ISongSongTagMapRepository songSongTagMapRepository,
             IUserService userService,
             ISpotifyApiService spotifyApiService)
             : base(mapper)
         {
             this._songTagRepository = songTagRepository;
             this._songTagCategoryRepository = songTagCategoryRepository;
+            this._songSongTagMapRepository = songSongTagMapRepository;
             this._userService = userService;
             this._spotifyApiService = spotifyApiService;
         }
@@ -101,6 +104,21 @@ namespace Spot.Business.Services
             entity.UserId = user.Id;
             var savedEntity = await this._songTagRepository.SaveAsync(entity);
             return OperationResult<SongTagModel>.Success(this._mapper.Map<SongTagModel>(savedEntity));
+        }
+
+        public async Task<OperationResult> DeleteAsync(string spotifyAccessToken, int songTagId)
+        {
+            var entity = await this._songTagRepository.GetAsync(songTagId);
+            if (entity == null)
+            {
+                return OperationResult.Failed();
+            }
+
+            await this._spotifyApiService.DeletePlaylistAsync(spotifyAccessToken, entity.SpotifyId);
+
+            await this._songSongTagMapRepository.DeleteRangeAsync(entity.SongSongTagMaps);
+            await this._songTagRepository.DeleteAsync(entity);
+            return OperationResult.Success();
         }
     }
 }

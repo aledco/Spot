@@ -5,6 +5,7 @@ import { SongTag } from "../../core/interfaces/song-tag.interface";
 import { ActivatedRoute } from "@angular/router";
 import { finalize, forkJoin } from "rxjs";
 import { SongTagService } from "../../song-tag/services/song-tag.service";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: 'app-edit-song',
@@ -19,6 +20,7 @@ export class EditSongComponent implements OnInit {
   constructor(
     private songService: SongService,
     private songTagService: SongTagService,
+    private toastr: ToastrService,
     private route: ActivatedRoute
   ) {
   }
@@ -51,6 +53,7 @@ export class EditSongComponent implements OnInit {
       .subscribe({
         next: song => {
           this.song = song;
+          this.toastr.success("Song was saved");
         }
       });
   }

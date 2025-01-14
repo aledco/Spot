@@ -31,6 +31,12 @@ export abstract class BaseAPIService {
       .pipe(catchError(error => this.handleErrorResult(error as HttpErrorResponse)));
   }
 
+  delete<T>(url: string): Observable<T> {
+    const accessToken = this.auth.spotifyAccessToken;
+    return this.http.delete<T>(this.baseUrl + url + `?spotifyAccessToken=${accessToken}`, { headers: this.getHeaders() })
+      .pipe(catchError(error => this.handleErrorResult(error as HttpErrorResponse)));
+  }
+
   private getHeaders(): HttpHeaders {
     const headers = new HttpHeaders();
     headers.set('Content-Type', 'application/json');
@@ -40,7 +46,7 @@ export abstract class BaseAPIService {
   private handleErrorResult(httpError: HttpErrorResponse) {
     const errorResult = httpError.error as ErrorResult;
     if (!errorResult || errorResult.isFatal) {
-      this.auth.home();
+      this.auth.signout();
     } else {
       for (const error of errorResult.errors) {
         this.toastr.error(error);

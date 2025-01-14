@@ -11,6 +11,7 @@ namespace Spot.Business.Contracts.Spotify
         Task<OperationResult<IList<SpotifyTrack>>> GetAllTracksForPlaylistAsync(string spotifyAccessToken, string playlistId);
         Task<OperationResult<IList<(SimplifiedSpotifyPlaylist Playlist, IList<SpotifyTrack> Tracks)>>> GetAllTracksFromPlaylistsAsync(string spotifyAccessToken);
         Task<OperationResult<SpotifyPlaylist?>> GetPlaylistAsync(string spotifyAccessToken, string playlistId);
+        Task<OperationResult> DeletePlaylistAsync(string spotifyAccessToken, string playlistId);
         Task<OperationResult<IList<SimplifiedSpotifyPlaylist>>> GetAllPlaylistsAsync(string spotifyAccessToken);
         Task<OperationResult<SpotifyPlaylist>> CreatePlaylistFromSongTagAsync(string spotifyAccessToken, SongTagModel songTag);
         Task<OperationResult> UpdatePlaylistFromSongTagAsync(string spotifyAccessToken, SongTagModel songTag);

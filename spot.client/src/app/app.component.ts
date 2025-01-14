@@ -20,6 +20,10 @@ export class AppComponent implements OnInit {
     this.menuItems = this.buildMenuItems();
   }
 
+  signout() {
+    this.auth.signout();
+  }
+
   private buildMenuItems(): MenuItem[] {
     return [
       {

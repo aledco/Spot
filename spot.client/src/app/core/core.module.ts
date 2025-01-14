@@ -4,12 +4,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { TableModule } from 'primeng/table';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { InputTextModule } from 'primeng/inputtext';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StorageService } from './services/storage.service';
 import { AuthService } from './services/auth.service';
 import { MenubarModule } from 'primeng/menubar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [
@@ -19,18 +20,22 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule,
     FormsModule,
-    TableModule,
-    MultiSelectModule,
-    InputTextModule,
-    ProgressSpinnerModule
-  ],
-  exports: [
-    CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     TableModule,
     MultiSelectModule,
     InputTextModule,
     ProgressSpinnerModule,
+    ButtonModule
+  ],
+  exports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TableModule,
+    MultiSelectModule,
+    InputTextModule,
+    ProgressSpinnerModule,
+    ButtonModule
   ]
 })
 export class CoreModule { }

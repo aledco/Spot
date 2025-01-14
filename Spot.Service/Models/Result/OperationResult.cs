@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Spot.Business.Resources;
 using System.Text.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 #nullable disable
 
@@ -12,7 +11,7 @@ namespace Spot.Business.Models.Result
     {
         public T Result { get; set; }
         public IList<string> Errors { get; set; } = [];
-        public bool IsValid { get => Errors.Count == 0; }
+        public bool IsValid { get => this.Errors == null || this.Errors.Count == 0; }
         public bool IsFatal { get; set; }
 
         private OperationResult(T result) : base()

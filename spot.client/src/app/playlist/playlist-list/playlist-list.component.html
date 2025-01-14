@@ -1,13 +1,30 @@
-<h2>Playlists</h2>
-<div *ngIf="playlists">
-  <table>
-    <tr>
-      <th>Name</th>
-      <!--<th>Owner</th>-->
-    </tr>
-    <tr *ngFor="let p of playlists">
-      <td>{{p.name}}</td>
-      <!--<td>{{p.owner.name}}</td>-->
-    </tr>
-  </table>
+<div class="page-header">
+  <h2>Playlists</h2>
 </div>
+<div class="page-body">
+  <p-progressSpinner ariaLabel="loaded" fill="transparent" *ngIf="!loaded || busy" />
+  <div *ngIf="loaded">
+    <p-table [value]="playlists" [paginator]="true" [rows]="25" sortField="name" [sortOrder]="1">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-playlist>
+        <tr>
+          <td>{{ playlist.name }}</td>
+          <td class="actions">
+            <a title="shuffle" [class.disabled]="busy"><i class="pi pi-sync"></i></a>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="2">No playlists have been found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+

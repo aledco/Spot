@@ -9,6 +9,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="src\app\core\interfaces\result\" />
+    <Folder Include="src\app\core\guards\" />
     <Folder Include="src\app\playlist\services\" />
     <Folder Include="src\app\playlist\playlist-list\" />
     <Folder Include="src\app\core\services\" />

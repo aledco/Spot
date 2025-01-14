@@ -1,21 +1,23 @@
-<h3>Edit</h3>
-
-<p-progressSpinner ariaLabel="loaded" *ngIf="!loaded || busy" />
-<div class="row" *ngIf="loaded">
-  <div class="col-4">
-    <label for="name" style="margin-right: 20px;">Name</label>
-    <input pInputText id="name" [(ngModel)]="song.name" style="width: 400px;" />
-  </div>
-  <div class="col-4">
-    <label for="name" style="margin-right: 20px;">Artist</label>
-    <input pInputText id="name" [(ngModel)]="song.artist" style="width: 400px;" />
-  </div>
-  <div class="col-4">
-    <label for="tag" style="margin-right: 20px;">Tag</label>
-    <p-multiSelect id="tag" [options]="tags" [(ngModel)]="song.tagIds" optionLabel="name" optionValue="id" display="chip"></p-multiSelect>
-  </div>
+<div class="page-header">
+  <h2>Edit Song</h2>
 </div>
-
-<div>
-  <button type="submit" (click)="save()" [disabled]="busy">Save</button>
+<div class="page-body">
+  <div class="row form-group" *ngIf="loaded">
+    <div class="col-md-4">
+      <label for="name">Name</label>
+      <input pInputText id="name" [(ngModel)]="song.name" style="width: 400px;" />
+    </div>
+    <div class="col-md-4">
+      <label for="name">Artist</label>
+      <input pInputText id="name" [(ngModel)]="song.artist" style="width: 400px;" />
+    </div>
+    <div class="col-md-4">
+      <label for="tag">Tag</label>
+      <p-multiSelect id="tag" [options]="tags" [(ngModel)]="song.tagIds" optionLabel="name" optionValue="id" display="chip"></p-multiSelect>
+    </div>
+  </div>
+  <div class="button-group">
+    <p-button routerLink="/song/list" severity="secondary" [class.disabled]="busy">Back</p-button>
+    <p-button type="submit" (click)="save()" [disabled]="busy">Save</p-button>
+  </div>
 </div>

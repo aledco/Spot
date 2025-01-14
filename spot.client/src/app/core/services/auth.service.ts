@@ -62,7 +62,7 @@ export class AuthService {
       })
   }
 
-  home() {
+  signout() {
     this.storageService.delete(this.spotifyAccessTokenKey);
     this.router.navigate(['/home']);
   }

@@ -5,11 +5,13 @@ import { SongService } from './services/song.service';
 import { EditSongComponent } from './edit-song/edit-song.component';
 import { SongTagService } from '../song-tag/services/song-tag.service';
 import { CoreModule } from '../core/core.module';
+import { AddSongComponent } from './add-song/add-song.component';
 
 @NgModule({
   declarations: [
     SongListComponent,
-    EditSongComponent
+    EditSongComponent,
+    AddSongComponent
   ],
   providers: [
     SongService,

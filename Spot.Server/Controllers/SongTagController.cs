@@ -52,5 +52,17 @@ namespace Spot.Server.Controllers
 
             return await this._songTagService.SaveAsync(this.SpotifyAccessToken, model);
         }
+
+        [HttpDelete]
+        [Route("{songTagId:int}")]
+        public async Task<OperationResult> DeleteAsync([FromRoute] int songTagId)
+        {
+            if (string.IsNullOrEmpty(this.SpotifyAccessToken))
+            {
+                return OperationResult.Fatal();
+            }
+
+            return await this._songTagService.DeleteAsync(this.SpotifyAccessToken, songTagId);
+        }
     }
 }

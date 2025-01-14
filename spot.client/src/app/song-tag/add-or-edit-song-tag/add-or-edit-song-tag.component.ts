@@ -3,6 +3,7 @@ import { SongTag } from "../../core/interfaces/song-tag.interface";
 import { ActivatedRoute } from "@angular/router";
 import { finalize } from "rxjs";
 import { SongTagService } from "../services/song-tag.service";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: 'app-add-or-edit-song-tag',
@@ -15,6 +16,7 @@ export class AddOrEditSongTagComponent implements OnInit {
 
   constructor(
     private songTagService: SongTagService,
+    private toastr: ToastrService,
     private route: ActivatedRoute
   ) {
   }
@@ -44,6 +46,7 @@ export class AddOrEditSongTagComponent implements OnInit {
       .subscribe({
         next: tag => {
           this.songTag = tag;
+          this.toastr.success("Tag was saved");
         }
       });
   }

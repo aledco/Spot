@@ -1,11 +1,48 @@
-<!DOCTYPE html>
+<div class="page-header">
+  <h2>Add Song</h2>
+</div>
+<div class="page-body">
+  <p-progressSpinner ariaLabel="loaded" *ngIf="!loaded || busy" />
+  <div *ngIf="loaded">
+    <form [formGroup]="form">
+      <div class="row form-group">
+        <div class="col-md-4">
+          <label for="name">Name</label>
+          <input pInputText id="name" formControlName="name" style="width: 400px;" autocomplete="off" />
+        </div>
+        <div class="col-md-4">
+          <label for="artist">Artist</label>
+          <input pInputText id="artist" formControlName="artist" style="width: 400px;" autocomplete="off" />
+        </div>
+        <div class="col-md-4">
+          <label for="album">Album</label>
+          <input pInputText id="album" formControlName="album" style="width: 400px;" autocomplete="off" />
+        </div>
+      </div>
+      <div class="button-group">
+        <p-button routerLink="/song/list" severity="secondary" [class.disabled]="busy">Back</p-button>
+        <p-button type="submit" (click)="search()" [disabled]="busy">Search</p-button>
+      </div>
+    </form>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+    <p-table *ngIf="songs" [value]="songs" sortField="name" [sortOrder]="1">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+          <th pSortableColumn="artist">Artist <p-sortIcon field="artist" /></th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-song>
+        <tr>
+          <td>{{ song.name }}</td>
+          <td>{{ song.artist }}</td>
+          <td class="actions">
+            <a (click)="add(song)" title="add" [class.disabled]="busy"><i class="pi pi-plus-circle"></i></a>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
 
-</body>
-</html>

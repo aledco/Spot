@@ -101,6 +101,8 @@ namespace Spot.Business.Services.Spotify
                 }
             } while (page != null && page.Next != null);
 
+            playlists = playlists.Where(p => p.Name.StartsWith("Test")).ToList();
+
             return OperationResult<IList<SimplifiedSpotifyPlaylist>>.Success(playlists);
         }
 
@@ -181,6 +183,23 @@ namespace Spot.Business.Services.Spotify
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<SpotifyPlaylist>(content, this._defaultSerializerOptions);
             return OperationResult<SpotifyPlaylist?>.Success(result);
+        }
+
+        public async Task<OperationResult> DeletePlaylistAsync(string spotifyAccessToken, string playlistId)
+        {
+            if (string.IsNullOrEmpty(playlistId))
+            {
+                return OperationResult.Success();
+            }
+
+            var httpClient = this.GetHttpClient(spotifyAccessToken);
+            var response = await httpClient.DeleteAsync($"https://api.spotify.com/v1/playlists/{playlistId}/followers");
+            if (!response.IsSuccessStatusCode)
+            {
+                return OperationResult.Failed();
+            }
+
+            return OperationResult.Success();
         }
 
         public async Task<OperationResult<SpotifyPlaylist>> CreatePlaylistFromSongTagAsync(string spotifyAccessToken, SongTagModel songTag)

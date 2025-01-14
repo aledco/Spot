@@ -16,4 +16,8 @@ export class SongTagService extends BaseAPIService {
   saveSongTag(songTag: SongTag): Observable<SongTag> {
     return this.post('/songtag', songTag);
   }
+
+  deleteSongTag(songTagId: number): Observable<any> {
+    return this.delete('/songtag/' + songTagId);
+  }
 }

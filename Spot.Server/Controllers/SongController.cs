@@ -53,6 +53,30 @@ namespace Spot.Server.Controllers
             return await this._songService.SaveAsync(this.SpotifyAccessToken, model);
         }
 
+        [HttpDelete]
+        [Route("{songId:int}")]
+        public async Task<OperationResult> DeleteAsync([FromRoute] int songId)
+        {
+            if (string.IsNullOrEmpty(this.SpotifyAccessToken))
+            {
+                return OperationResult.Fatal();
+            }
+
+            return await this._songService.DeleteAsync(this.SpotifyAccessToken, songId);
+        }
+
+        [HttpPost]
+        [Route("Search")]
+        public async Task<OperationResult<IList<SongModel>>> SearchSongsAsync([FromBody] SongSearchCriteriaModel searchCriteria)
+        {
+            if (string.IsNullOrEmpty(this.SpotifyAccessToken))
+            {
+                return OperationResult<IList<SongModel>>.Fatal();
+            }
+
+            return await this._songService.SearchSongsAsync(this.SpotifyAccessToken, searchCriteria);
+        }
+
         [HttpPost]
         [Route("Sync")]
         public async Task<OperationResult<IList<SongModel>>> SyncSongsFromPlaylistsAsync()

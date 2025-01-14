@@ -37,6 +37,14 @@ namespace Spot.Data
                 .Navigation(e => e.SongTags)
                 .AutoInclude();
 
+            modelBuilder.Entity<Song>()
+                .Navigation(e => e.SongSongTagMaps)
+                .AutoInclude();
+
+            modelBuilder.Entity<SongTag>()
+                .Navigation(e => e.SongSongTagMaps)
+                .AutoInclude();
+
             // cant have both
             //modelBuilder.Entity<SongTag>()
             //  .Navigation(e => e.Songs)

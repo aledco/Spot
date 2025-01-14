@@ -10,11 +10,10 @@ namespace Spot.Data.Repositories
         {
         }
 
-        public async Task<SongTag?> GetByPlaylistNameAsync(int userId, string playlistName)
+        public async Task<SongTag?> GetBySpotifyIdAsync(string spotifyId)
         {
             return await this._context.SongTags
-                .Where(e => e.UserId.HasValue && e.UserId.Value == userId)
-                .Where(e => e.Name == playlistName)
+                .Where(e => e.SpotifyId == spotifyId)
                 .FirstOrDefaultAsync();
         }
 

@@ -1,3 +1,10 @@
-<p-menubar *ngIf="isLoggedIn" [model]="menuItems" />
+<p-menubar *ngIf="isLoggedIn" [model]="menuItems">
+  <ng-template pTemplate="start">
+    <h2 class="menu-title"><a routerLink="/dashboard">Spot</a></h2>
+  </ng-template>
+  <ng-template pTemplate="end">
+    <p-button (click)="signout()">Sign Out</p-button>
+  </ng-template>
+</p-menubar>
 
 <router-outlet></router-outlet>

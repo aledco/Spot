@@ -1,34 +1,42 @@
-<h2>Songs</h2>
-
-<p-progressSpinner ariaLabel="loaded" *ngIf="!loaded || busy" />
-<div *ngIf="loaded">
-  <button (click)="sync()" [disabled]="busy">Sync Songs From Playlists</button>
-  <p-table [value]="songs" [paginator]="true" [rows]="25" sortField="name" [sortOrder]="1">
-    <ng-template pTemplate="header">
-      <tr>
-        <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
-        <th pSortableColumn="artist">Artist <p-sortIcon field="artist" /></th>
-        <th>Tags</th>
-        <th>Actions</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-song>
-      <tr>
-        <td>{{ song.name }}</td>
-        <td>{{ song.artist }}</td>
-        <td>
-          <p *ngFor="let tag of song.tags">{{tag}}</p>
-        </td>
-        <td class="actions">
-          <a title="edit" routerLink="/song/edit/{{song.id}}" [class.disabled]="busy"><i class="pi pi-pencil"></i></a>
-          <a title="remove" [class.disabled]="busy"><i class="pi pi-trash"></i></a>
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="4">No songs have been added.</td>
-      </tr>
-    </ng-template>
-  </p-table>
+<div class="page-header">
+  <h2>Songs</h2>
+</div>
+<div class="page-body">
+  <p-progressSpinner ariaLabel="loaded" fill="transparent" *ngIf="!loaded || busy" />
+  <div *ngIf="loaded">
+    <p-table [value]="songs" [paginator]="true" [rows]="25" sortField="name" [sortOrder]="1">
+      <ng-template pTemplate="caption">
+        <div class="button-group">
+          <p-button routerLink="/song/add" [disabled]="busy">Add Song</p-button>
+          <p-button (click)="sync()" [disabled]="busy">Sync Songs</p-button>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+          <th pSortableColumn="artist">Artist <p-sortIcon field="artist" /></th>
+          <th>Tags</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-song>
+        <tr>
+          <td>{{ song.name }}</td>
+          <td>{{ song.artist }}</td>
+          <td>
+            <p *ngFor="let tag of song.tags">{{tag}}</p>
+          </td>
+          <td class="actions">
+            <a title="edit" routerLink="/song/edit/{{song.id}}" [class.disabled]="busy"><i class="pi pi-pencil"></i></a>
+            <a title="delete" (click)="delete(song)" [class.disabled]="busy"><i class="pi pi-trash"></i></a>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4">No songs have been added.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>
