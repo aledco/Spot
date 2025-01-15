@@ -4,14 +4,14 @@ import { Observable, catchError, map, mergeMap, throwError } from "rxjs";
 import { AuthService } from "../services/auth.service";
 import { ErrorResult } from "../interfaces/result/error-result.interface";
 import { ToastrService } from 'ngx-toastr';
+import { environment } from "../../../environments/environment";
 
 export abstract class BaseAPIService {
 
   protected http: HttpClient;
   protected auth: AuthService;
   protected toastr: ToastrService;
-  //private readonly baseUrl = "https://localhost:7108/api"; // TODO read from config
-  private readonly baseUrl = "/api"; // TODO fix proxy file
+  private readonly baseUrl = environment.apiUrl;
 
   constructor() {
     this.http = inject(HttpClient);
@@ -50,7 +50,6 @@ export abstract class BaseAPIService {
   }
 
   private handleErrorResult(httpError: HttpErrorResponse) {
-    debugger;
     const errorResult = httpError.error as ErrorResult;
     if (!errorResult || !errorResult.errors) {
       this.toastr.error("An unknown error occured");

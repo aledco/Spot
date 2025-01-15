@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from './core/services/auth.service';
+import { ConfigurationService } from './core/services/configuration.service';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,7 @@ export class AppComponent implements OnInit {
 
   menuItems!: MenuItem[];
 
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService, private config: ConfigurationService) {}
 
   get isLoggedIn(): boolean {
     return this.auth.isLoggedIn;
@@ -18,6 +19,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.menuItems = this.buildMenuItems();
+
+    this.config.getConfiguration().subscribe();
   }
 
   signout() {

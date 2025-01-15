@@ -4,6 +4,7 @@ import { Observable, Subject, of } from "rxjs";
 import { Router } from "@angular/router";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Buffer } from 'buffer';
+import { ConfigurationService } from "./configuration.service";
 
 @Injectable()
 
@@ -19,8 +20,14 @@ export class AuthService {
 
   private readonly spotifyAccessTokenKey = "SPOTIFY_AUTH_CODE";
   private readonly _spotifyAccessToken = new Subject<string>();
+
+  private state!: string;
   
-  constructor(private storageService: StorageService, private http: HttpClient, private router: Router) { }
+  constructor(
+    private storageService: StorageService,
+    private config: ConfigurationService,
+    private http: HttpClient,
+    private router: Router) { }
 
   get spotifyAccessToken(): string {
     const accessToken = this.storageService.get<string>(this.spotifyAccessTokenKey);
@@ -37,29 +44,44 @@ export class AuthService {
   }
 
   login(): void {
-    window.location.href = `${this.authorizeUrl}?response_type=code&client_id=${this.clientId}&scope=${this.scope}&redirect_uri=${this.redirectUri}`; // TODO use config
+    this.config.appSettings
+      .subscribe({
+        next: appSettings => {
+          // TODO use state
+          debugger;
+          const settings = appSettings.spotifySettings;
+          window.location.href = `${this.authorizeUrl}?response_type=code&client_id=${settings.clientId}&scope=${settings.scope}&redirect_uri=${settings.redirectUrl}`;
+        }
+      });
   }
 
   postLogin(code: string) {
-    const data = `code=${code}&redirect_uri=${this.redirectUri}&grant_type=authorization_code`;
-
-    const headers = new HttpHeaders({
-      "content-type": "application/x-www-form-urlencoded",
-      "Authorization": 'Basic ' + (Buffer.from(this.clientId + ':' + this.clientSecret).toString('base64'))
-    }); 
-
-    this.http.post(this.tokenUrl, data, {headers})
+    this.config.appSettings
       .subscribe({
-        next: (response: any) => {
-          const accessToken = response.access_token;
-          this.storageService.store(this.spotifyAccessTokenKey, accessToken);
-          this._spotifyAccessToken.next(accessToken);
-          this.router.navigate(["/dashboard"]);
-        },
-        error: error => {
-          console.log(error); // TODO handle
+        next: appSettings => {
+          debugger;
+          const settings = appSettings.spotifySettings;
+          const data = `code=${code}&redirect_uri=${settings.redirectUrl}&grant_type=authorization_code`;
+
+          const headers = new HttpHeaders({
+            "content-type": "application/x-www-form-urlencoded",
+            "Authorization": 'Basic ' + (Buffer.from(this.clientId + ':' + this.clientSecret).toString('base64'))
+          });
+
+          this.http.post(this.tokenUrl, data, { headers })
+            .subscribe({
+              next: (response: any) => {
+                const accessToken = response.access_token;
+                this.storageService.store(this.spotifyAccessTokenKey, accessToken);
+                this._spotifyAccessToken.next(accessToken);
+                this.router.navigate(["/dashboard"]);
+              },
+              error: error => {
+                this.signout();
+              }
+            });
         }
-      })
+      });
   }
 
   signout() {
