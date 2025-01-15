@@ -3,6 +3,7 @@ using Spot.Business.Contracts;
 using Spot.Business.Contracts.Spotify;
 using Spot.Business.Models;
 using Spot.Business.Models.Result;
+using Spot.Business.Resources;
 using Spot.Data.Contracts;
 using Spot.Data.Entities;
 
@@ -58,12 +59,12 @@ namespace Spot.Business.Services
             var entity = await this._songTagRepository.GetAsync(songTagId);
             if (entity == null)
             {
-                return null; // TODO error
+                return OperationResult<SongTagModel>.Failed();
             }
 
             if (entity.UserId != user.Id)
             {
-                return null; // TODO error
+                return OperationResult<SongTagModel>.Failed();
             }
 
             var model = this._mapper.Map<SongTagModel>(entity);
@@ -72,8 +73,6 @@ namespace Spot.Business.Services
 
         public async Task<OperationResult<SongTagModel>> SaveAsync(string spotifyAccessToken, SongTagModel model)
         {
-            // TODO use transaction scope
-
             if (model.Id == null)
             {
                 var playlistResult = await this._spotifyApiService.CreatePlaylistFromSongTagAsync(spotifyAccessToken, model);

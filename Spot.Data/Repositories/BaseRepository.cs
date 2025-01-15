@@ -42,7 +42,18 @@ namespace Spot.Data.Repositories
 
         public async Task SaveRangeAsync(IEnumerable<T> entities)
         {
-            this._context.AddRange(entities); // TODO do the same as save async
+            foreach (var entity in entities)
+            {
+                if (entity.Id == null)
+                {
+                    this._context.Add(entity);
+                }
+                else
+                {
+                    this._context.Update(entity);
+                }
+            }
+
             await this._context.SaveChangesAsync();
         }
 

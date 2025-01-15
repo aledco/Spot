@@ -27,5 +27,17 @@ namespace Spot.Server.Controllers
 
             return await this._spotifyPlaylistService.GetAllPlaylistsAsync(this.SpotifyAccessToken);
         }
+
+        [HttpPut]
+        [Route("{playlistId}/Shuffle")]
+        public async Task<OperationResult> ShufflePlaylisyAsync([FromRoute] string playlistId)
+        {
+            if (string.IsNullOrEmpty(this.SpotifyAccessToken))
+            {
+                return OperationResult.Failed();
+            }
+
+            return await this._spotifyPlaylistService.ShufflePlaylistAsync(this.SpotifyAccessToken, playlistId);
+        }
     }
 }

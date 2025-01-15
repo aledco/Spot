@@ -15,7 +15,7 @@
         <tr>
           <td>{{ playlist.name }}</td>
           <td class="actions">
-            <a title="shuffle" [class.disabled]="busy"><i class="pi pi-sync"></i></a>
+            <a title="shuffle" (click)="shuffle(playlist)" [class.disabled]="busy"><i class="pi pi-sync"></i></a>
           </td>
         </tr>
       </ng-template>

@@ -12,11 +12,14 @@ const PROXY_CONFIG = [
   //  secure: false
   //},
   {
-    "/api": {
-      "target": "http://localhost:7108",
-      "secure": true
-    },
-    "changeOrigin": true
+    "/api/**": {
+      "target": "https://localhost:7108/api",
+      "secure": false,
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/api": ""
+      }
+    }
   }
 ]
 

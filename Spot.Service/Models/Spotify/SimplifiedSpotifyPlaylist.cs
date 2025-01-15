@@ -12,7 +12,7 @@
 
         public string Id { get; set; }
 
-        public object[] Images { get; set; } // TODO
+        public object[] Images { get; set; }
 
         public string Name { get; set; }
 
@@ -22,7 +22,7 @@
 
         public string SnapshotId { get; set; }
 
-        public object Tracks { get; set; } // TODO
+        public object Tracks { get; set; }
 
         public string Type { get; set; }
 

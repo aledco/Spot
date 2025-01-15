@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { PlaylistService } from "../services/playlist.service";
 import { SimplifiedSpotifyPlaylist } from "../../core/interfaces/spotify/spotify-simplified-playlist.interface";
 import { finalize } from "rxjs";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: 'app-playlist-list',
@@ -12,7 +13,7 @@ export class PlaylistListComponent implements OnInit {
   busy: boolean = false;
   playlists!: SimplifiedSpotifyPlaylist[];
 
-  constructor(private playlistService: PlaylistService) { }
+  constructor(private playlistService: PlaylistService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.playlistService.getPlaylists()
@@ -20,6 +21,17 @@ export class PlaylistListComponent implements OnInit {
       .subscribe({
         next: playlists => {
           this.playlists = playlists;
+        }
+      });
+  }
+
+  shuffle(playlist: SimplifiedSpotifyPlaylist) {
+    this.busy = true;
+    this.playlistService.shufflePlaylist(playlist.id)
+      .pipe(finalize(() => this.busy = false))
+      .subscribe({
+        next: _ => {
+          this.toastr.success('Playlist was shuffled')
         }
       });
   }

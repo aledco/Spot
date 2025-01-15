@@ -10,8 +10,8 @@ export abstract class BaseAPIService {
   protected http: HttpClient;
   protected auth: AuthService;
   protected toastr: ToastrService;
-  private readonly baseUrl = "https://localhost:7108/api"; // TODO read from config
-  //private readonly baseUrl = "/api";
+  //private readonly baseUrl = "https://localhost:7108/api"; // TODO read from config
+  private readonly baseUrl = "/api"; // TODO fix proxy file
 
   constructor() {
     this.http = inject(HttpClient);
@@ -25,9 +25,15 @@ export abstract class BaseAPIService {
       .pipe(catchError(error => this.handleErrorResult(error as HttpErrorResponse)));
   }
 
-  post<T, R>(url: string, data: T): Observable<R> {
+  post<T, R>(url: string, data: T | null = null): Observable<R> {
     const accessToken = this.auth.spotifyAccessToken;
     return this.http.post<R>(this.baseUrl + url + `?spotifyAccessToken=${accessToken}`, data, { headers: this.getHeaders() })
+      .pipe(catchError(error => this.handleErrorResult(error as HttpErrorResponse)));
+  }
+
+  put<T, R>(url: string, data: T | null = null): Observable<R> {
+    const accessToken = this.auth.spotifyAccessToken;
+    return this.http.put<R>(this.baseUrl + url + `?spotifyAccessToken=${accessToken}`, data, { headers: this.getHeaders() })
       .pipe(catchError(error => this.handleErrorResult(error as HttpErrorResponse)));
   }
 
@@ -44,8 +50,11 @@ export abstract class BaseAPIService {
   }
 
   private handleErrorResult(httpError: HttpErrorResponse) {
+    debugger;
     const errorResult = httpError.error as ErrorResult;
-    if (!errorResult || errorResult.isFatal) {
+    if (!errorResult || !errorResult.errors) {
+      this.toastr.error("An unknown error occured");
+    } else if (errorResult.isFatal) {
       this.auth.signout();
     } else {
       for (const error of errorResult.errors) {

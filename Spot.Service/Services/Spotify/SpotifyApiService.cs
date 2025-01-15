@@ -347,7 +347,6 @@ namespace Spot.Business.Services.Spotify
 
         public async Task<OperationResult> SyncPlaylistForSongTagAsync(string spotifyAccessToken, SongTagModel songTag, IList<SongModel> songs)
         {
-            // TODO use transaction scope
             var playlistResult = await this.GetPlaylistAsync(spotifyAccessToken, songTag.SpotifyId);
             if (!playlistResult.IsValid)
             {
@@ -378,6 +377,37 @@ namespace Spot.Business.Services.Spotify
 
             await this.AddTracksToPlaylistAsync(spotifyAccessToken, playlist.Id, tracksToAdd);
             await this.RemoveTracksFromPlaylistAsync(spotifyAccessToken, playlist.Id, tracksToRemove);
+            return OperationResult.Success();
+        }
+
+        public async Task<OperationResult> ShufflePlaylistAsync(string spotifyAccessToken, string playlistId)
+        {
+            var playlistResult = await this.GetPlaylistAsync(spotifyAccessToken, playlistId);
+            if (!playlistResult.IsValid)
+            {
+                return OperationResult.ErrorsFrom(playlistResult);   
+            }
+
+            var playlist = playlistResult.Result;
+            var size = playlist.Tracks.Total;
+
+            var httpClient = this.GetHttpClient(spotifyAccessToken);
+
+            var rand = new Random();
+            for (var i = 0; i < size; i++)
+            {
+                var newPosition = rand.Next(size+1);
+                var body = new
+                {
+                    RangeStart = i,
+                    InsertBefore = newPosition,
+                    RangeLengt = 1
+                };
+
+                var bodyContent = new StringContent(JsonSerializer.Serialize(body, this._defaultSerializerOptions));
+                await httpClient.PutAsync($"https://api.spotify.com/v1/playlists/{playlistId}/tracks", bodyContent);
+            }
+
             return OperationResult.Success();
         }
     }

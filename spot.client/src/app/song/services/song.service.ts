@@ -28,6 +28,6 @@ export class SongService extends BaseAPIService {
   }
 
   syncSongs(): Observable<Song[]> {
-    return this.post('/song/sync', null);
+    return this.post('/song/sync');
   }
 }

@@ -1,6 +1,7 @@
 ﻿using Spot.Business.Models;
 using Spot.Business.Models.Result;
 using Spot.Business.Models.Spotify;
+using System.Threading.Tasks;
 
 namespace Spot.Business.Contracts.Spotify
 {
@@ -20,5 +21,6 @@ namespace Spot.Business.Contracts.Spotify
         Task<OperationResult> AddSongToPlaylistForSongTagAsync(string spotifyAccessToken, SongTagModel songTag, SongModel song);
         Task<OperationResult> RemoveSongFromPlaylistForSongTagAsync(string spotifyAccessToken, SongTagModel songTag, SongModel song);
         Task<OperationResult> SyncPlaylistForSongTagAsync(string spotifyAccessToken, SongTagModel songTag, IList<SongModel> songs);
+        Task<OperationResult> ShufflePlaylistAsync(string spotifyAccessToken, string playlistId);
     }
 }

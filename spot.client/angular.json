@@ -40,7 +40,7 @@
               "node_modules/primeicons/primeicons.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/ngx-toastr/toastr.css",
-              "src/styles.css"
+              "src/styles.css
             ],
             "scripts": []
           },
@@ -75,13 +75,13 @@
               "buildTarget": "spot.client:build:production"
             },
             "development": {
-              "buildTarget": "spot.client:build:development"
+              "buildTarget": "spot.client:build:development:chrome"
             }
           },
           "defaultConfiguration": "development",
           "options": {
             "proxyConfig": "src/proxy.conf.js",
-            "browserTarget": "spot.client:build:development:chrome"
+            "buildTarget": "spot.client:build"
           }
         },
         "extract-i18n": {
