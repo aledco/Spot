@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Spot.Business.Contracts.Spotify;
-using Spot.Business.Models.Result;
-using Spot.Business.Models.Spotify;
+using Spot.Server.Authorization;
 
 namespace Spot.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [SpotifyAccessCodeAuthorization]
     public class PlaylistController : BaseController
     {
         private readonly ISpotifyApiService _spotifyPlaylistService;
@@ -18,26 +18,18 @@ namespace Spot.Server.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<OperationResult<IList<SimplifiedSpotifyPlaylist>>> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
-            if (string.IsNullOrEmpty(this.SpotifyAccessToken))
-            {
-                return OperationResult<IList<SimplifiedSpotifyPlaylist>>.Failed();
-            }
-
-            return await this._spotifyPlaylistService.GetAllPlaylistsAsync(this.SpotifyAccessToken);
+            var spotifyAccessToken = this.Request.Headers["Spotify-Access-Token"];
+            return await this._spotifyPlaylistService.GetAllPlaylistsAsync(spotifyAccessToken);
         }
 
         [HttpPut]
         [Route("{playlistId}/Shuffle")]
-        public async Task<OperationResult> ShufflePlaylisyAsync([FromRoute] string playlistId)
+        public async Task<IActionResult> ShufflePlaylisyAsync([FromRoute] string playlistId)
         {
-            if (string.IsNullOrEmpty(this.SpotifyAccessToken))
-            {
-                return OperationResult.Failed();
-            }
-
-            return await this._spotifyPlaylistService.ShufflePlaylistAsync(this.SpotifyAccessToken, playlistId);
+            var spotifyAccessToken = this.Request.Headers["Spotify-Access-Token"];
+            return await this._spotifyPlaylistService.ShufflePlaylistAsync(spotifyAccessToken, playlistId);
         }
     }
 }

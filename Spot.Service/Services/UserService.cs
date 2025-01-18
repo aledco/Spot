@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Spot.Business.Contracts;
 using Spot.Business.Contracts.Spotify;
 using Spot.Business.Models;
@@ -14,18 +15,19 @@ namespace Spot.Business.Services
         private readonly ISpotifyApiService _spotifyApiService;
 
         public UserService(
+            IHttpContextAccessor contextAccessor,
             IMapper mapper,
             IUserRepository userRepository, 
             ISpotifyApiService spotifyApiService)
-            : base(mapper)
+            : base(contextAccessor, mapper)
         {
             this._userRepository = userRepository;
             this._spotifyApiService = spotifyApiService;
         }
 
-        public async Task<OperationResult<UserModel>> GetAsync(string spotifyAccessToken)
+        public async Task<OperationResult<UserModel>> GetCurrentUserAsync()
         {
-            var spotifyUserResult = await this._spotifyApiService.GetSpotifyUserAsync(spotifyAccessToken);
+            var spotifyUserResult = await this._spotifyApiService.GetSpotifyUserAsync(this.SpotifyAccessToken);
             if (!spotifyUserResult.IsValid)
             {
                 return spotifyUserResult.ErrorsAs<UserModel>();

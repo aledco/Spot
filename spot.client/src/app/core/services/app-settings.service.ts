@@ -1,17 +1,11 @@
-import { Injectable } from "@angular/core";
-import { Observable, Subject, map, of, tap } from "rxjs";
+import { Observable, Subject, of } from "rxjs";
 import { AppSettings } from "../interfaces/configuration/app-settings.interface";
-import { HttpClient } from "@angular/common/http";
-import { environment } from "../../../environments/environment";
+import { Injectable } from "@angular/core";
 
 @Injectable()
-export class ConfigurationService {
+export class AppSettingsService {
   private appSettingsSubject: Subject<AppSettings> = new Subject<AppSettings>();
   private storedAppSettings!: AppSettings;
-
-  apiUrl = environment.apiUrl;
-
-  constructor(private http: HttpClient) { }
 
   get appSettings(): Observable<AppSettings> {
     if (this.storedAppSettings) {
@@ -24,10 +18,5 @@ export class ConfigurationService {
   set appSettings(appSettings: AppSettings) {
     this.storedAppSettings = appSettings;
     this.appSettingsSubject.next(appSettings);
-  }
-
-  getConfiguration(): Observable<AppSettings> {
-    return this.http.get<AppSettings>(this.apiUrl + "/configuration")
-      .pipe(tap(appSettings => this.appSettings = appSettings));
   }
 }

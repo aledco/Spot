@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Spot.Business.Contracts;
 using Spot.Business.Models;
-using Spot.Business.Models.Result;
+using Spot.Server.Authorization;
 
 namespace Spot.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [SpotifyAccessCodeAuthorization]
     public class SongController : BaseController
     {
 
@@ -19,74 +20,45 @@ namespace Spot.Server.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<OperationResult<IList<SongModel>>> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
-            if (string.IsNullOrEmpty(this.SpotifyAccessToken))
-            {
-                return OperationResult<IList<SongModel>>.Fatal();
-            }
-
-            return await this._songService.GetAllAsync(this.SpotifyAccessToken);
+            return await this._songService.GetAllAsync();
         }
 
         [HttpGet]
         [Route("{songId:int}")]
-        public async Task<OperationResult<SongModel>> GetAsync([FromRoute] int songId)
+        public async Task<IActionResult> GetAsync([FromRoute] int songId)
         {
-            if (string.IsNullOrEmpty(this.SpotifyAccessToken))
-            {
-                return OperationResult<SongModel>.Fatal();
-            }
-
-            return await this._songService.GetAsync(this.SpotifyAccessToken, songId);
+            return await this._songService.GetAsync(songId);
         }
 
         [HttpPost]
         [Route("")]
-        public async Task<OperationResult<SongModel>> SaveAsync([FromBody] SongModel model)
+        public async Task<IActionResult> SaveAsync([FromBody] SongModel model)
         {
-            if (string.IsNullOrEmpty(this.SpotifyAccessToken))
-            {
-                return OperationResult<SongModel>.Fatal();
-            }
-
-            return await this._songService.SaveAsync(this.SpotifyAccessToken, model);
+            return await this._songService.SaveAsync(model);
         }
 
         [HttpDelete]
         [Route("{songId:int}")]
-        public async Task<OperationResult> DeleteAsync([FromRoute] int songId)
+        public async Task<IActionResult> DeleteAsync([FromRoute] int songId)
         {
-            if (string.IsNullOrEmpty(this.SpotifyAccessToken))
-            {
-                return OperationResult.Fatal();
-            }
 
-            return await this._songService.DeleteAsync(this.SpotifyAccessToken, songId);
+            return await this._songService.DeleteAsync(songId);
         }
 
         [HttpPost]
         [Route("Search")]
-        public async Task<OperationResult<IList<SongModel>>> SearchSongsAsync([FromBody] SongSearchCriteriaModel searchCriteria)
+        public async Task<IActionResult> SearchAsync([FromBody] SongSearchCriteriaModel searchCriteria)
         {
-            if (string.IsNullOrEmpty(this.SpotifyAccessToken))
-            {
-                return OperationResult<IList<SongModel>>.Fatal();
-            }
-
-            return await this._songService.SearchSongsAsync(this.SpotifyAccessToken, searchCriteria);
+            return await this._songService.SearchAsync(searchCriteria);
         }
 
         [HttpPost]
         [Route("Sync")]
-        public async Task<OperationResult<IList<SongModel>>> SyncSongsFromPlaylistsAsync()
+        public async Task<IActionResult> SyncSongsFromPlaylistsAsync()
         {
-            if (string.IsNullOrEmpty(this.SpotifyAccessToken))
-            {
-                return OperationResult<IList<SongModel>>.Fatal();
-            }
-
-            return await this._songService.SyncSongsFromPlaylistsAsync(this.SpotifyAccessToken);
+            return await this._songService.SyncSongsFromPlaylistsAsync();
         }
     }
 }

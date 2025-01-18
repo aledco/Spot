@@ -5,6 +5,6 @@ namespace Spot.Business.Contracts
 {
     public interface IUserService
     {
-        Task<OperationResult<UserModel>> GetAsync(string spotifyAccessToken);
+        Task<OperationResult<UserModel>> GetCurrentUserAsync();
     }
 }

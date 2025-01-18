@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Spot.Business.Models.Configuration;
 using Spot.Business.Models.Result;
 
@@ -17,7 +18,8 @@ namespace Spot.Server.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<OperationResult<ClientAppSettingsModel>> GetAsync()
+        [AllowAnonymous]
+        public IActionResult Get()
         {
             var section = this._configuration.GetSection("ClientAppSettings");
             if (section == null)

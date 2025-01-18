@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { AuthService } from "../core/services/auth.service";
 
 @Component({
@@ -7,15 +7,16 @@ import { AuthService } from "../core/services/auth.service";
   templateUrl: './callback.component.html'
 })
 export class CallbackComponent implements OnInit {
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private authService: AuthService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     const code = this.route.snapshot.queryParamMap.get('code');
-    if (code) {
-      this.authService.postLogin(code);
+    const state = this.route.snapshot.queryParamMap.get('state');
+    if (code && state) {
+      this.authService.postLogin(code, state);
     }
     else {
-      this.router.navigate([""]);
+      this.authService.signout();
     }
   }
 }

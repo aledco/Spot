@@ -5,9 +5,9 @@ namespace Spot.Business.Contracts
 {
     public interface ISongTagService
     {
-        Task<OperationResult<IList<SongTagModel>>> GetAllAsync(string spotifyAccessToken);
-        Task<OperationResult<SongTagModel>> GetAsync(string spotifyAccessToken, int songTagId);
-        Task<OperationResult<SongTagModel>> SaveAsync(string spotifyAccessToken, SongTagModel model);
-        Task<OperationResult> DeleteAsync(string spotifyAccessToken, int songTagId);
+        Task<OperationResult<IList<SongTagModel>>> GetAllAsync();
+        Task<OperationResult<SongTagModel>> GetAsync(int songTagId);
+        Task<OperationResult<SongTagModel>> SaveAsync(SongTagModel model);
+        Task<OperationResult> DeleteAsync(int songTagId);
     }
 }

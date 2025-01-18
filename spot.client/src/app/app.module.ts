@@ -14,6 +14,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { CoreModule } from './core/core.module';
 import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { ConfigurationService } from './core/services/configuration.service';
+import { AppSettingsService } from './core/services/app-settings.service';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { ConfigurationService } from './core/services/configuration.service';
   providers: [
     StorageService,
     AuthService,
+    AppSettingsService,
     ConfigurationService,
     provideAnimations(),
     provideToastr()

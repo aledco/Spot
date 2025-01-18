@@ -8,6 +8,7 @@ using Spot.Data;
 using Spot.Data.Contracts;
 using Spot.Data.Repositories;
 using Spot.Business.Maps;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Spot.Server
 {
@@ -24,6 +25,8 @@ namespace Spot.Server
             builder.Services.AddTransient<ISongTagRepository, SongTagRepository>();
             builder.Services.AddTransient<ISongTagCategoryRepository, SongTagCategoryRepository>();
             builder.Services.AddTransient<ISongSongTagMapRepository, SongSongTagMapRepository>();
+
+            builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         public static void ConfigureAutoMapper(this WebApplicationBuilder builder)
