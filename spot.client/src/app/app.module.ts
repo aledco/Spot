@@ -15,6 +15,7 @@ import { CoreModule } from './core/core.module';
 import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { ConfigurationService } from './core/services/configuration.service';
 import { AppSettingsService } from './core/services/app-settings.service';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { AppSettingsService } from './core/services/app-settings.service';
     AppSettingsService,
     ConfigurationService,
     provideAnimations(),
-    provideToastr()
+    provideToastr(),
+    provideAnimationsAsync()
   ],
   imports: [
     BrowserModule,

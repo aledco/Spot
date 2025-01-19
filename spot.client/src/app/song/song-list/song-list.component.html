@@ -13,9 +13,25 @@
       </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
-          <th pSortableColumn="artist">Artist <p-sortIcon field="artist" /></th>
-          <th>Tags</th>
+          <th pSortableColumn="name">
+            Name
+            <p-columnFilter type="text" field="name" display="menu" />
+            <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="artist">
+            Artist
+            <p-columnFilter type="text" field="artist" display="menu" />
+            <p-sortIcon field="artist" />
+          </th>
+          <th>
+            Tags
+            <p-columnFilter field="tagIds" matchMode="contains-one-tagId" display="menu" [showAddButton]="false"
+                  [showMatchModes]="false" [showOperator]="false" [showClearButton]="false" [showApplyButton]="false">
+              <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                <p-multiSelect id="tag" [options]="tags" [ngModel]="value" optionLabel="name" optionValue="id" (onChange)="filter($event.value)"></p-multiSelect>
+              </ng-template>
+            </p-columnFilter>
+          </th>
           <th>Actions</th>
         </tr>
       </ng-template>
