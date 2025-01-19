@@ -11,7 +11,6 @@ import { environment } from "../../../environments/environment";
 @Injectable()
 export class AuthService {
   private readonly authorizeUrl = "https://accounts.spotify.com/authorize";
-  private readonly tokenUrl = "https://accounts.spotify.com/api/token";
 
   private readonly spotifyAccessTokenKey = "SPOTIFY_AUTH_CODE";
   private readonly _spotifyAccessToken = new Subject<string>();
@@ -67,32 +66,6 @@ export class AuthService {
           this.router.navigate(["/dashboard"]);
         }
       });
-
-    //this.config.appSettings
-    //  .subscribe({
-    //    next: appSettings => {
-    //      const settings = appSettings.spotifySettings;
-    //      const data = `code=${code}&redirect_uri=${settings.redirectUrl}&grant_type=authorization_code`;
-
-    //      const headers = new HttpHeaders({
-    //        "content-type": "application/x-www-form-urlencoded",
-    //        "Authorization": 'Basic ' + (Buffer.from(settings.clientId + ':' + settings.clientSecret).toString('base64'))
-    //      });
-
-    //      this.http.post(this.tokenUrl, data, { headers })
-    //        .subscribe({
-    //          next: (response: any) => {
-    //            const accessToken = response.access_token;
-    //            this.storageService.store(this.spotifyAccessTokenKey, accessToken);
-    //            this._spotifyAccessToken.next(accessToken);
-    //            this.router.navigate(["/dashboard"]);
-    //          },
-    //          error: error => {
-    //            this.signout();
-    //          }
-    //        });
-    //    }
-    //  });
   }
 
   signout() {
