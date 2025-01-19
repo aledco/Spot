@@ -7,6 +7,7 @@ namespace Spot.Business.Contracts.Spotify
 {
     public interface ISpotifyApiService
     {
+        Task<OperationResult<string>> GetAccessTokenAsync(string spotifyAuthCode);
         Task<OperationResult<SpotifyUser>> GetSpotifyUserAsync(string spotifyAccessToken);
         Task<OperationResult<SpotifySearchResult>> SearchAsync(string spotifyAccessToken, SpotifySearchCriteria searchCriteria);
         Task<OperationResult<IList<SpotifyTrack>>> GetAllTracksForPlaylistAsync(string spotifyAccessToken, string playlistId);

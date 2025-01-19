@@ -1,9 +1,10 @@
-﻿using Azure;
+﻿using Microsoft.Extensions.Configuration;
 using Spot.Business.Contracts.Spotify;
 using Spot.Business.Models;
 using Spot.Business.Models.Result;
 using Spot.Business.Models.Spotify;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 
 namespace Spot.Business.Services.Spotify
@@ -12,18 +13,55 @@ namespace Spot.Business.Services.Spotify
     {
 
         protected readonly Uri _spotifyBaseUri = new Uri("https://api.spotify.com/v1");
+        private readonly IConfiguration _configuration;
 
         protected readonly JsonSerializerOptions _defaultSerializerOptions = new JsonSerializerOptions()
         {
             PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
         };
 
+        public SpotifyApiService(IConfiguration configuration)
+        {
+            this._configuration = configuration;
+        }
+
         private HttpClient GetHttpClient(string spotifyAccessToken)
         {
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", spotifyAccessToken);
-            //httpClient.BaseAddress = this._spotifyBaseUri;
+            //httpClient.BaseAddress = this._spotifyBaseUri; // TODO get base address to work
             return httpClient;
+        }
+
+        public async Task<OperationResult<string>> GetAccessTokenAsync(string spotifyAuthCode)
+        {
+            // TODO add support for refreshing the token
+
+            var clientId = this._configuration["AppSettings:SpotifySettings:ClientId"];
+            var clientSecret = this._configuration["AppSettings:SpotifySettings:ClientSecret"];
+            var redirectUrl = this._configuration["AppSettings:SpotifySettings:RedirectUrl"];
+            var data = new Dictionary<string, string>()
+            {
+                ["code"] = spotifyAuthCode,
+                ["redirect_uri"] = redirectUrl,
+                ["grant_type"] = "authorization_code"
+            };
+
+            var authTokenBytes = Encoding.UTF8.GetBytes(clientId + ":" + clientSecret);
+            var authToken = Convert.ToBase64String(authTokenBytes);
+
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/x-www-form-urlencoded");
+            httpClient.DefaultRequestHeaders.Add("Authorization", "Basic " + authToken);
+            var response = await httpClient.PostAsync("https://accounts.spotify.com/api/token", new FormUrlEncodedContent(data));
+            if (!response.IsSuccessStatusCode)
+            {
+                return OperationResult<string>.Failed();
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+            var spotifyAuth = JsonSerializer.Deserialize<SpotifyAuth>(content, this._defaultSerializerOptions);
+            return OperationResult<string>.Success(spotifyAuth.AccessToken);
         }
 
         public async Task<OperationResult<SpotifyUser>> GetSpotifyUserAsync(string spotifyAccessToken)

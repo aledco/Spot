@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Buffer } from 'buffer';
 import { v4 as uuid } from 'uuid';
 import { ConfigurationService } from "./configuration.service";
+import { environment } from "../../../environments/environment";
 
 @Injectable()
 export class AuthService {
@@ -58,31 +59,40 @@ export class AuthService {
 
     this.storageService.delete(this.stateKey);
 
-    this.config.appSettings
+    this.http.get<string>(this.config.apiUrl + '/auth/spotify/' + code)
       .subscribe({
-        next: appSettings => {
-          const settings = appSettings.spotifySettings;
-          const data = `code=${code}&redirect_uri=${settings.redirectUrl}&grant_type=authorization_code`;
-
-          const headers = new HttpHeaders({
-            "content-type": "application/x-www-form-urlencoded",
-            "Authorization": 'Basic ' + (Buffer.from(settings.clientId + ':' + settings.clientSecret).toString('base64'))
-          });
-
-          this.http.post(this.tokenUrl, data, { headers })
-            .subscribe({
-              next: (response: any) => {
-                const accessToken = response.access_token;
-                this.storageService.store(this.spotifyAccessTokenKey, accessToken);
-                this._spotifyAccessToken.next(accessToken);
-                this.router.navigate(["/dashboard"]);
-              },
-              error: error => {
-                this.signout();
-              }
-            });
+        next: accessToken => {
+          this.storageService.store(this.spotifyAccessTokenKey, accessToken);
+          this._spotifyAccessToken.next(accessToken);
+          this.router.navigate(["/dashboard"]);
         }
       });
+
+    //this.config.appSettings
+    //  .subscribe({
+    //    next: appSettings => {
+    //      const settings = appSettings.spotifySettings;
+    //      const data = `code=${code}&redirect_uri=${settings.redirectUrl}&grant_type=authorization_code`;
+
+    //      const headers = new HttpHeaders({
+    //        "content-type": "application/x-www-form-urlencoded",
+    //        "Authorization": 'Basic ' + (Buffer.from(settings.clientId + ':' + settings.clientSecret).toString('base64'))
+    //      });
+
+    //      this.http.post(this.tokenUrl, data, { headers })
+    //        .subscribe({
+    //          next: (response: any) => {
+    //            const accessToken = response.access_token;
+    //            this.storageService.store(this.spotifyAccessTokenKey, accessToken);
+    //            this._spotifyAccessToken.next(accessToken);
+    //            this.router.navigate(["/dashboard"]);
+    //          },
+    //          error: error => {
+    //            this.signout();
+    //          }
+    //        });
+    //    }
+    //  });
   }
 
   signout() {
